@@ -19,8 +19,8 @@
 .print-wrapper {
   display: flex;
   flex-direction: column;
-  align-items: center; /* ✅ Center horizontally */
   height: 100vh;
+  margin-right: 120px; /* ✅ keep this alignment */
   justify-content: space-between;
   position: relative;
   page-break-after: always;
@@ -37,6 +37,7 @@
   position: relative;
 }
 
+/* ✅ Add background once per card, sized to the rotated content */
 .print-card::before {
   content: "";
   position: absolute;
@@ -44,8 +45,8 @@
   height: 4in;
   background-image: url('./images/image001.png');
   background-size: cover;
-  background-position: center;
   background-repeat: no-repeat;
+  background-position: center;
   z-index: 0;
 }
 
@@ -59,7 +60,7 @@
   width: 4in;
   height: 4in;
   position: relative;
-  z-index: 1; /* 🪄 ensures it sits above background */
+  z-index: 1; /* ✅ sits above background */
 }
 
 .print-card-inner h2 {
@@ -95,7 +96,6 @@
   justify-content: center;
   box-sizing: border-box;
 }
-
 
   .print-cell.header {
     border: none;
