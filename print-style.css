@@ -12,10 +12,6 @@
   padding: 0;
   background-color: white;
   font-family: 'Rye', cursive;
-  background-image: url('./images/image001.png'); /* adjust path if needed */
-  background-size: contain;             /* fit image inside page */
-  background-position: center center;
-  background-repeat: no-repeat;
   -webkit-print-color-adjust: exact;
   print-color-adjust: exact;
 }
@@ -40,8 +36,12 @@
   page-break-inside: avoid;
   overflow: hidden;
   position: relative;
+  
+  background-image: url('./images/image001.png'); /* ✅ Moved here */
+  background-size: contain;
+  background-position: center center;
+  background-repeat: no-repeat;
 }
-
 
 .print-card-inner {
   transform: rotate(-90deg);
