@@ -1,5 +1,5 @@
 /* print-style.css */
-@import url('https://fonts.googleapis.com/css2?family=Rock+Salt&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Rye&family=Rock+Salt&display=swap');
 
 @media print {
   @page {
@@ -8,11 +8,17 @@
   }
 
   body {
-    margin: 0;
-    padding: 0;
-    background: white;
-    font-family: 'Rock Salt', cursive;
-  }
+  margin: 0;
+  padding: 0;
+  background: white;
+  font-family: 'Rye', cursive;
+  background-image: url('');
+  background-size: cover; /* or 'contain' */
+  background-position: center;
+  background-repeat: no-repeat;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
 
 .print-wrapper {
   display: flex;
@@ -49,7 +55,7 @@
 
 
 .print-card-inner h2 {
-  font-family: 'Rock Salt', cursive;
+  font-family: 'Rye', cursive;
   font-size: 1.1rem; /* card id */
   font-weight: bold;
   padding: 4px 8px;
@@ -75,7 +81,7 @@
   font-size: 1.6rem; /* card numbers */
   font-weight: bold;
   text-align: center;
-  font-family: 'Rock Salt', cursive;
+  font-family: 'Rye', cursive;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -86,7 +92,7 @@
   .print-cell.header {
     border: none;
     font-size: 2.6rem;
-    font-family: 'Rock Salt', cursive;
+    font-family: 'Rye', cursive;
   }
 
   .cut-line {
