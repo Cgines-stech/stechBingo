@@ -10,15 +10,16 @@
   body {
   margin: 0;
   padding: 0;
-  background: white;
+  background-color: white;
   font-family: 'Rye', cursive;
-  background-image: url('./images/image001.png');
-  background-size: cover; /* or 'contain' */
-  background-position: center;
+  background-image: url('./images/image001.png'); /* adjust path if needed */
+  background-size: contain;             /* fit image inside page */
+  background-position: center center;
   background-repeat: no-repeat;
   -webkit-print-color-adjust: exact;
   print-color-adjust: exact;
 }
+
 
 .print-wrapper {
   display: flex;
