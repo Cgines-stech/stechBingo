@@ -1,0 +1,96 @@
+/* print-style.css */
+@import url('https://fonts.googleapis.com/css2?family=Rock+Salt&display=swap');
+
+@media print {
+  @page {
+    size: portrait;
+    margin: 0;
+  }
+
+  body {
+    margin: 0;
+    padding: 0;
+    background: white;
+    font-family: 'Rock Salt', cursive, sans-serif;
+  }
+
+  .print-wrapper {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    justify-content: space-between;
+    position: relative;
+    page-break-after: always;
+  }
+
+.print-card {
+    width: 100vw;
+    height: 50vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    page-break-inside: avoid;
+    position: relative;
+    overflow: hidden;
+  }
+
+.print-card-inner {
+  transform: rotate(-90deg);
+  transform-origin: center center;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end; /* right-align the title */
+  justify-content: flex-start;
+  width: 320px;
+  height: auto;
+  position: relative;
+}
+
+.print-card-inner h2 {
+  font-family: 'Rock Salt', cursive;
+  font-size: 1.1rem;
+  font-weight: bold;
+  padding: 4px 8px;
+  border: 2px solid #000;
+  border-radius: 4px;
+  background: #fff;
+  margin: 0 0 8px 0; /* margin below */
+  align-self: flex-end;
+}
+
+  .print-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 6px;
+    width: 100%;
+  }
+
+  .print-cell {
+    border: 1px solid #000;
+    padding: 10px;
+    font-size: 1rem;
+    font-weight: bold;
+    text-align: center;
+    font-family: 'Rock Salt', cursive;
+  }
+
+  .print-cell.header {
+    border: none;
+    font-size: 1.2rem;
+  }
+
+  .cut-line {
+    width: 100%;
+    border-top: 2px dashed #aaa;
+    margin: 0;
+    position: absolute;
+    top: 50%;
+    left: 0;
+    z-index: 1;
+  }
+
+  .print-cell.free {
+    background: #24a0d6;
+    color: #24a0d6;
+  }
+}

@@ -1,0 +1,15 @@
+@import url('https://fonts.googleapis.com/css2?family=Rock+Salt&display=swap');
+
+body {
+  font-family: 'Rock Salt', cursive, 'Courier New', monospace;
+  text-align: center;
+  padding: 20px;
+  background: url('https://www.transparenttextures.com/patterns/wood-pattern.png');
+}
+
+/* ... rest of CSS omitted here for brevity ... */
+
+#all-cards-view .card-cell.marked {
+  background: #24a0d6;
+  color: white;
+}

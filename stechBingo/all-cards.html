@@ -1,0 +1,108 @@
+<!-- all-cards.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>All Bingo Cards</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="cardData_with_free.js"></script>
+  <style>
+    body { background: #f9f9f9; font-family: sans-serif; text-align: center; }
+    .card-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+      margin: 20px;
+    }
+    .card-wrapper {
+      border: 2px solid #ccc;
+      padding: 10px;
+      background: #fff;
+    }
+    .card-title {
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 30px);
+      gap: 2px;
+    }
+    .card-cell {
+      width: 30px;
+      height: 30px;
+      line-height: 30px;
+      background: #eee;
+      border-radius: 4px;
+      font-size: 0.9rem;
+      font-weight: bold;
+    }
+    .card-cell.marked {
+      background: #4caf50;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+  <h1>All Bingo Cards</h1>
+  <div class="card-container" id="all-cards"></div>
+
+  <script>
+  const calledNumbers = JSON.parse(localStorage.getItem("bingoState") || "{}").calledNumbers || [];
+  const container = document.getElementById("all-cards");
+
+  function hasBingo(card, called) {
+    const marked = card.map(row => row.map(num => num === 0 || called.includes(num)));
+
+    // Check rows
+    for (let r = 0; r < 5; r++) {
+      if (marked[r].every(v => v)) return true;
+    }
+
+    // Check columns
+    for (let c = 0; c < 5; c++) {
+      if (marked.every(row => row[c])) return true;
+    }
+
+    // Diagonals
+    if (marked.every((row, i) => row[i])) return true;
+    if (marked.every((row, i) => row[4 - i])) return true;
+
+    return false;
+  }
+
+  // Collect and sort cards
+  const cardElements = Object.entries(cardData).map(([id, card]) => {
+    const wrapper = document.createElement("div");
+    const isWinner = hasBingo(card, calledNumbers);
+
+    wrapper.className = "card-wrapper" + (isWinner ? " winner" : "");
+    wrapper.innerHTML = `<div class="card-title">Card ${id}</div>`;
+
+    const grid = document.createElement("div");
+    grid.className = "card-grid";
+
+    for (let row of card) {
+      for (let num of row) {
+        const cell = document.createElement("div");
+        const isMarked = num === 0 || calledNumbers.includes(num);
+        cell.className = "card-cell" + (isMarked ? " marked" : "");
+        cell.textContent = num === 0 ? "FREE" : num;
+        grid.appendChild(cell);
+      }
+    }
+
+    wrapper.appendChild(grid);
+    return { element: wrapper, isWinner };
+  });
+
+  // Sort: winners first
+  cardElements.sort((a, b) => b.isWinner - a.isWinner);
+
+  // Append to container
+  cardElements.forEach(card => container.appendChild(card.element));
+</script>
+
+</body>
+</html>

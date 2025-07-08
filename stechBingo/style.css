@@ -1,0 +1,245 @@
+/* style.css */
+body {
+  font-family: sans-serif;
+  text-align: center;
+  padding: 20px;
+  background: #f9f9f9;
+}
+
+.view {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 800px;
+  margin: 20px auto;
+}
+
+.grid-row {
+  display: flex;
+  justify-content: center;
+  margin: 5px 0;
+}
+
+.hidden {
+  display: none !important;
+}
+
+#last-called {
+  width: 100px;
+  height: 100px;
+  line-height: 100px;
+  border-radius: 50%;
+  margin: 30px auto;
+  font-size: 2.5rem;
+  font-weight: bold;
+  text-align: center;
+  background: #ccc;
+  color: black;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+/* BINGO color classes for called balls */
+.called.B, #last-called.last-ball.B { background: #007bff; color: white; }
+.called.I, #last-called.last-ball.I { background: #ffeb3b; color: black; }
+.called.N, #last-called.last-ball.N { background: #ff9800; color: white; }
+.called.G, #last-called.last-ball.G { background: #4caf50; color: white; }
+.called.O, #last-called.last-ball.O { background: #9c27b0; color: white; }
+
+.called {
+  animation: bounceIn 0.3s ease;
+}
+
+@keyframes bounceIn {
+  0% { transform: scale(0.6); opacity: 0.5; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.number {
+  width: 60px;
+  height: 60px;
+  line-height: 60px;
+  margin: 2px;
+  border-radius: 50%;
+  background: #ddd;
+  font-size: 1.5rem;
+  font-weight: bold;
+  text-align: center;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.row-label {
+  width: 60px;
+  font-weight: bold;
+  margin-right: 10px;
+  font-size: 2rem;
+  line-height: 60px;
+}
+
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 60px);
+  grid-gap: 6px;
+  margin-top: 20px;
+}
+
+.card-cell {
+  width: 60px;
+  height: 60px;
+  line-height: 60px;
+  font-size: 1.4rem;
+  border-radius: 8px;
+  background: #ccc;
+  font-weight: bold;
+  text-align: center;
+}
+
+.card-cell.marked {
+  background: #24a0d6;
+  color: white;
+}
+
+.card-cell.winner {
+  border: 3px solid red;
+}
+
+/* Styles scoped to all-cards view only */
+#all-cards-view {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 12px;
+  justify-items: center;
+  margin-top: 20px;
+  padding: 10px;
+  max-width: 100%;
+}
+
+#all-cards-view .card-wrapper {
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 5px;
+  width: 120px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+#all-cards-view .card-title {
+  font-size: 0.9rem;
+  font-weight: bold;
+  margin-bottom: 4px;
+}
+
+#all-cards-view .card-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 20px);
+  gap: 4px;
+}
+
+#all-cards-view .card-cell {
+  width: 20px;
+  height: 20px;
+  line-height: 20px;
+  font-size: 0.75rem;
+  border-radius: 4px;
+  background: #ccc;
+  text-align: center;
+  font-weight: bold;
+}
+
+#all-cards-view .card-cell.marked {
+  background: #4caf50;
+  color: white;
+}
+.card-wrapper.winner {
+  border-color: #e91e63;
+  box-shadow: 0 0 10px #e91e63;
+  background: #fff0f5;
+}
+.winner-badge {
+  color: white;
+  background: #e91e63;
+  font-weight: bold;
+  padding: 4px 8px;
+  border-radius: 4px;
+  margin-top: 5px;
+}
+.announcer-display {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 30px;
+  gap: 20px;
+  font-family: sans-serif;
+}
+
+.announce-letter {
+  font-size: 6rem;
+  font-weight: bold;
+  line-height: 1;
+}
+
+.announce-ball {
+  width: 100px;
+  height: 100px;
+  line-height: 100px;
+  border-radius: 50%;
+  font-size: 2.5rem;
+  font-weight: bold;
+  text-align: center;
+  background: #ccc;
+  color: white;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* Reuse existing color classes for consistency */
+.announce-letter.B, .announce-ball.B { background: #007bff; color: white; }
+.announce-letter.I, .announce-ball.I { background: #ffeb3b; color: black; }
+.announce-letter.N, .announce-ball.N { background: #ff9800; color: white; }
+.announce-letter.G, .announce-ball.G { background: #4caf50; color: white; }
+.announce-letter.O, .announce-ball.O { background: #9c27b0; color: white; }
+#control-count {
+  font-weight: bold;
+  color: #2196f3;
+}
+.control-layout {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.left-controls {
+  flex: 1;
+}
+
+.right-sidebar {
+  width: 250px;
+  background: rgba(255, 255, 255, 0.1); /* semi-transparent if dark bg */
+  color: #fff; /* light text for dark background */
+  border-left: 2px solid #666;
+  padding: 10px;
+  font-size: 0.9rem;
+}
+
+#winner-list {
+  list-style: none;
+  padding-left: 0;
+  margin: 0;
+}
+
+.right-sidebar h3 {
+  color: #00eaff;
+  border-bottom: 1px solid #00eaff;
+  padding-bottom: 4px;
+  margin-bottom: 10px;
+  font-size: 1rem;
+  text-shadow: 0 0 5px #00eaff;
+}
+
+#winner-list li {
+  color: #fffbcc;
+  font-weight: bold;
+  text-shadow: 0 0 2px #000;
+}
+
+
