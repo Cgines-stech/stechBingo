@@ -1,0 +1,91 @@
+<!-- print-cards.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Printable Bingo Cards</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rock+Salt&display=swap">
+  <link rel="stylesheet" href="print-style.css">
+  <script src="cardData_with_free3.js"></script>
+</head>
+<body>
+  <div id="print-area"></div>
+
+  <script>
+    window.onload = () => {
+      const printArea = document.getElementById("print-area");
+      const cardIDs = Object.keys(cardData);
+
+      for (let i = 0; i < cardIDs.length; i += 2) {
+        const wrapper = document.createElement("div");
+        wrapper.className = "print-wrapper";
+
+        // First card (top half)
+        const upperCard = buildCard(cardIDs[i]);
+wrapper.appendChild(upperCard);
+
+        // Cut line
+        const cutLine = document.createElement("div");
+cutLine.className = "cut-line";
+wrapper.appendChild(cutLine);
+
+        // Second card (bottom half) if it exists
+        if (cardIDs[i + 1]) {
+  const lowerCard = buildCard(cardIDs[i + 1]);
+  wrapper.appendChild(lowerCard);
+}
+
+        printArea.appendChild(wrapper);
+      }
+
+      function buildCard(id) {
+  const cardWrapper = document.createElement("div");
+  cardWrapper.className = "print-card";
+
+  const inner = document.createElement("div");
+  inner.className = "print-card-inner";
+
+  const title = document.createElement("h2");
+  title.textContent = `Card ${id}`;
+  inner.appendChild(title);
+
+  const grid = document.createElement("div");
+  grid.className = "print-grid";
+
+  const headers = ["B", "I", "N", "G", "O"];
+  headers.forEach(h => {
+    const cell = document.createElement("div");
+    cell.className = "print-cell header";
+    cell.textContent = h;
+    grid.appendChild(cell);
+  });
+
+  const rows = cardData[id];
+  for (let r = 0; r < 5; r++) {
+    for (let c = 0; c < 5; c++) {
+      const cell = document.createElement("div");
+      const num = rows[r][c];
+      cell.className = "print-cell";
+      if (num === 0) {
+        cell.classList.add("free");
+        cell.textContent = "";
+      } else {
+        cell.textContent = num;
+      }
+      grid.appendChild(cell);
+    }
+  }
+
+  inner.appendChild(grid);
+  cardWrapper.appendChild(inner);
+  return cardWrapper;
+}
+
+
+
+
+      window.print();
+    };
+  </script>
+</body>
+</html>
