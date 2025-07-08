@@ -7,7 +7,21 @@
     margin: 0;
   }
 
-  body {
+body::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-image: url('./images/image001.png');
+  background-size: 100% 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+  z-index: -1;
+}
+
+body {
   margin: 0;
   padding: 0;
   background-color: white;
@@ -20,16 +34,12 @@
   display: flex;
   flex-direction: column;
   height: 100vh;
-  margin-right: 120px; /* ✅ keep this for alignment */
+  margin-right: 120px;
   justify-content: space-between;
   position: relative;
   page-break-after: always;
-
-  background-image: url('./images/image001.png');
-  background-size: 100% 100%;
-  background-position: center center;
-  background-repeat: no-repeat;
 }
+
 
 .print-card {
   width: 100%;
