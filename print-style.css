@@ -36,11 +36,6 @@
   page-break-inside: avoid;
   overflow: hidden;
   position: relative;
-  
-  background-image: url('./images/image001.png'); /* ✅ Moved here */
-  background-size: contain;
-  background-position: center center;
-  background-repeat: no-repeat;
 }
 
 .print-card-inner {
@@ -52,7 +47,13 @@
   justify-content: flex-start;
   width: 4in;
   height: 4in;
+
+  background-image: url('./images/image001.png');
+  background-size: cover; /* or contain if you want full fit */
+  background-position: center;
+  background-repeat: no-repeat;
 }
+
 
 
 .print-card-inner h2 {
