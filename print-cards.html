@@ -6,7 +6,7 @@
   <title>Printable Bingo Cards</title>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rock+Salt&display=swap">
   <link rel="stylesheet" href="print-style.css">
-  <script src="cardData_with_free.js"></script>
+  <script src="cardData_with_free_tester.js"></script>
 </head>
 <body>
   <div id="print-area"></div>
@@ -22,18 +22,18 @@
 
         // First card (top half)
         const upperCard = buildCard(cardIDs[i]);
-        wrapper.appendChild(upperCard);
+wrapper.appendChild(upperCard);
 
         // Cut line
         const cutLine = document.createElement("div");
-        cutLine.className = "cut-line";
-        wrapper.appendChild(cutLine);
+cutLine.className = "cut-line";
+wrapper.appendChild(cutLine);
 
         // Second card (bottom half) if it exists
         if (cardIDs[i + 1]) {
-          const lowerCard = buildCard(cardIDs[i + 1]);
-          wrapper.appendChild(lowerCard);
-        }
+  const lowerCard = buildCard(cardIDs[i + 1]);
+  wrapper.appendChild(lowerCard);
+}
 
         printArea.appendChild(wrapper);
       }
@@ -47,7 +47,7 @@
 
   const title = document.createElement("h2");
   title.textContent = `Card ${id}`;
-  inner.appendChild(title); // 🟢 Put the title inside the rotated container
+  inner.appendChild(title);
 
   const grid = document.createElement("div");
   grid.className = "print-grid";
@@ -80,6 +80,8 @@
   cardWrapper.appendChild(inner);
   return cardWrapper;
 }
+
+
 
 
       window.print();

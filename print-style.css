@@ -11,44 +11,45 @@
     margin: 0;
     padding: 0;
     background: white;
-    font-family: 'Rock Salt', cursive, sans-serif;
+    font-family: 'Rock Salt', cursive;
   }
 
-  .print-wrapper {
-    display: flex;
-    flex-direction: column;
-    height: 100vh;
-    justify-content: space-between;
-    position: relative;
-    page-break-after: always;
-  }
+.print-wrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  justify-content: space-between;
+  position: relative;
+  page-break-after: always;
+}
 
 .print-card {
-    width: 100vw;
-    height: 50vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    page-break-inside: avoid;
-    position: relative;
-    overflow: hidden;
-  }
+  width: 100%;
+  height: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  page-break-inside: avoid;
+  overflow: hidden;
+  position: relative;
+}
+
 
 .print-card-inner {
   transform: rotate(-90deg);
   transform-origin: center center;
   display: flex;
   flex-direction: column;
-  align-items: flex-end; /* right-align the title */
+  align-items: center;
   justify-content: flex-start;
-  width: 320px;
-  height: auto;
-  position: relative;
+  width: 4in;
+  height: 4in;
 }
+
 
 .print-card-inner h2 {
   font-family: 'Rock Salt', cursive;
-  font-size: 1.1rem;
+  font-size: 1.1rem; /* card id */
   font-weight: bold;
   padding: 4px 8px;
   border: 2px solid #000;
@@ -59,24 +60,32 @@
 }
 
   .print-grid {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 6px;
-    width: 100%;
-  }
+  display: grid;
+  grid-template-columns: repeat(5, 0.75in);
+  grid-template-rows: repeat(6, 0.75in); /* 5 rows + 1 header row */
+  gap: 0.05in;
+  justify-content: center;
+}
 
   .print-cell {
-    border: 1px solid #000;
-    padding: 10px;
-    font-size: 1rem;
-    font-weight: bold;
-    text-align: center;
-    font-family: 'Rock Salt', cursive;
-  }
+  width: 0.75in;
+  height: 0.75in;
+  border: 1px solid #000; 
+  font-size: 1.6rem; /* card numbers */
+  font-weight: bold;
+  text-align: center;
+  font-family: 'Rock Salt', cursive;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+}
+
 
   .print-cell.header {
     border: none;
-    font-size: 1.2rem;
+    font-size: 2.6rem;
+    font-family: 'Rock Salt', cursive;
   }
 
   .cut-line {
