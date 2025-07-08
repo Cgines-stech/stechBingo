@@ -16,12 +16,11 @@
   print-color-adjust: exact;
 }
 
-
 .print-wrapper {
   display: flex;
   flex-direction: column;
+  align-items: center; /* ✅ Center horizontally */
   height: 100vh;
-  margin-right: 120px;
   justify-content: space-between;
   position: relative;
   page-break-after: always;
@@ -36,10 +35,18 @@
   page-break-inside: avoid;
   overflow: hidden;
   position: relative;
+}
+
+.print-card::before {
+  content: "";
+  position: absolute;
+  width: 4in;
+  height: 4in;
   background-image: url('./images/image001.png');
-  background-size: cover; /* or contain if you want full fit */
+  background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
+  z-index: 0;
 }
 
 .print-card-inner {
@@ -51,10 +58,9 @@
   justify-content: flex-start;
   width: 4in;
   height: 4in;
-
+  position: relative;
+  z-index: 1; /* 🪄 ensures it sits above background */
 }
-
-
 
 .print-card-inner h2 {
   font-family: 'Rye', cursive;
