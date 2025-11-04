@@ -4,8 +4,13 @@
 @import url('https://fonts.googleapis.com/css2?family=Mountains+of+Christmas:wght@400;700&display=swap');
 
 :root {
-  --background-top: #faf9f7;
-  --background-bottom: #f0f5f9;
+  /* gentle snow + winter mint tones */
+  --background-top: #f9fbff;
+  --background-mid: #eef7fa;
+  --background-bottom: #f4f8f6;
+  --sparkle1: rgba(255, 255, 255, 0.9);
+  --sparkle2: rgba(255, 255, 255, 0.4);
+
   --gold: #d4af37;
   --green: #2e7d6b;
   --green-light: #45c99a;
@@ -13,21 +18,21 @@
   --white: #ffffff;
 }
 
-/* ===== Page background ===== */
 body {
   font-family: 'Segoe UI', system-ui, -apple-system, Roboto, 'Helvetica Neue', Arial, sans-serif;
   text-align: center;
   padding: 20px;
   color: var(--ink);
 
-  /* light, wintery background gradient with subtle sparkle */
+  /* soft frosty gradient background with shimmer lights */
   background:
-    radial-gradient(circle at 20% 20%, #ffffff 0%, transparent 35%),
-    radial-gradient(circle at 80% 40%, #ffffff 0%, transparent 30%),
-    linear-gradient(180deg, var(--background-top), var(--background-bottom));
-  min-height: 100vh;
+    radial-gradient(circle at 20% 30%, var(--sparkle1) 0%, transparent 25%),
+    radial-gradient(circle at 80% 70%, var(--sparkle2) 0%, transparent 30%),
+    linear-gradient(180deg, var(--background-top), var(--background-mid) 50%, var(--background-bottom));
   background-attachment: fixed;
+  min-height: 100vh;
 }
+
 
 /* Festive headings */
 h1, h2, h3, .glow-title, #pattern-banner label, .announce-letter {
