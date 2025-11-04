@@ -63,20 +63,28 @@ const P = {
       [[0,4],[1,3],[2,2],[3,1],[4,0],[4,1]],
     ];
   },
-  arrows() {
-    // 4 orientations of an arrow: a 5-cell straight line with a 3-cell head
-    const up = [
-      [4,2],[3,2],[2,2],[1,2],[0,2], // shaft up
-      [0,1],[0,3],[1,2]              // head (T-like near tip)
-    ];
-    const down = up.map(([r,c]) => [4-r,c]);
-    const left = [
-      [2,4],[2,3],[2,2],[2,1],[2,0], // shaft left
-      [1,0],[3,0],[2,1]              // head
-    ];
-    const right = left.map(([r,c]) => [r,4-c]);
-    return [up,down,left,right];
-  },
+arrows() {
+  // Up arrow: tip at [0,2], head wings at [1,1] and [1,3], shaft down to [4,2]
+  const up = [
+    [0,2],           // tip
+    [1,1],[1,2],[1,3], // head row
+    [2,2],[3,2],[4,2]  // shaft
+  ];
+  // Down arrow: mirror vertically
+  const down = up.map(([r,c]) => [4 - r, c]);
+
+  // Left arrow: tip at [2,0], head wings [1,1] & [3,1], shaft across to [2,4]
+  const left = [
+    [2,0],           // tip
+    [1,1],[2,1],[3,1], // head col
+    [2,2],[2,3],[2,4]  // shaft
+  ];
+  // Right arrow: mirror horizontally
+  const right = left.map(([r,c]) => [r, 4 - c]);
+
+  return [up, down, left, right];
+},
+
   coverall() {
     const cells = [];
     for (let r = 0; r < 5; r++) for (let c = 0; c < 5; c++) cells.push([r,c]);
@@ -185,17 +193,26 @@ const PATTERN_LABELS = {
 let previewIndex = 0;
 let previewTimer = null;
 
+function pairLines(lines) {
+  // lines: Array<Array<[r,c]>>
+  const pairs = [];
+  for (let i = 0; i < lines.length; i++) {
+    for (let j = i + 1; j < lines.length; j++) {
+      // union of two lines
+      const set = new Set([...lines[i], ...lines[j]].map(([r,c]) => `${r},${c}`));
+      pairs.push([...set].map(s => s.split(',').map(n => parseInt(n,10))));
+    }
+  }
+  return pairs; // up to 66 pairs for 12 lines; rotates nicely
+}
+
 function getPatternSetsForPreview(patternKey) {
-  // Return an array of "sets"; each set is an array of [r,c] cells to highlight
   switch (patternKey) {
     case "anyLine":       return P.allLines();
-    case "doubleBingo":   return P.allLines(); // show one line at a time; note says "need two"
+    case "doubleBingo":   return pairLines(P.allLines());
     case "hardWay": {
       const removeCenter = set => set.filter(([r,c]) => !(r===2 && c===2));
-      return [
-        ...P.rowsOnly().map(removeCenter),
-        ...P.colsOnly().map(removeCenter),
-      ];
+      return [...P.rowsOnly().map(removeCenter), ...P.colsOnly().map(removeCenter)];
     }
     case "fourCorners":    return P.fourCorners();
     case "insideSquare":   return P.insideSquare3x3();
@@ -223,12 +240,12 @@ function renderPatternPreview() {
   const idx = sets.length > 0 ? (previewIndex % sets.length) : 0;
   const active = sets[idx] || [];
   const isDouble = key === "doubleBingo";
+let html = `
+  <div class="pf-title">${PATTERN_LABELS[key] || key}</div>
+  ${isDouble ? '<div class="pf-note">Win with any <strong>two lines</strong>.</div>' : ''}
+  <div class="mini-card">
+`;
 
-  let html = `
-    <div class="preview-title">${PATTERN_LABELS[key] || key}</div>
-    ${isDouble ? '<div class="preview-note">Win with any <strong>two</strong> lines.</div>' : ''}
-    <div class="mini-card">
-  `;
 
   for (let r = 0; r < 5; r++) {
     for (let c = 0; c < 5; c++) {
@@ -383,6 +400,76 @@ function renderCard(cardId) {
       grid.appendChild(cell);
     }
   }
+}
+
+function ensurePatternFlyout() {
+  if (document.getElementById("pattern-flyout")) return;
+
+  const fly = document.createElement("div");
+  fly.id = "pattern-flyout";
+  fly.innerHTML = `
+    <div class="pf-head">
+      <span class="pf-drag-handle">🎯 Pattern Preview</span>
+      <div class="pf-actions">
+        <button class="pf-btn pf-min" title="Minimize">—</button>
+        <button class="pf-btn pf-close" title="Close">×</button>
+      </div>
+    </div>
+    <div class="pf-body">
+      <div id="pattern-preview"></div>
+    </div>
+  `;
+  document.body.appendChild(fly);
+
+  // actions
+  const body = fly.querySelector(".pf-body");
+  fly.querySelector(".pf-close").addEventListener("click", () => fly.remove());
+  fly.querySelector(".pf-min").addEventListener("click", () => body.classList.toggle("hidden"));
+
+  // drag
+  makeDraggable(fly, fly.querySelector(".pf-drag-handle"));
+}
+
+function makeDraggable(el, handle) {
+  let startX=0, startY=0, originX=0, originY=0, dragging=false;
+
+  const onDown = (e) => {
+    dragging = true;
+    const ev = e.touches ? e.touches[0] : e;
+    startX = ev.clientX; startY = ev.clientY;
+    const rect = el.getBoundingClientRect();
+    originX = rect.left; originY = rect.top;
+    document.addEventListener("mousemove", onMove);
+    document.addEventListener("mouseup", onUp);
+    document.addEventListener("touchmove", onMove, {passive:false});
+    document.addEventListener("touchend", onUp);
+  };
+
+  const onMove = (e) => {
+    if (!dragging) return;
+    const ev = e.touches ? e.touches[0] : e;
+    const dx = ev.clientX - startX;
+    const dy = ev.clientY - startY;
+    el.style.left = `${originX + dx}px`;
+    el.style.top  = `${originY + dy}px`;
+  };
+
+  const onUp = () => {
+    dragging = false;
+    document.removeEventListener("mousemove", onMove);
+    document.removeEventListener("mouseup", onUp);
+    document.removeEventListener("touchmove", onMove);
+    document.removeEventListener("touchend", onUp);
+  };
+
+  handle.addEventListener("mousedown", onDown);
+  handle.addEventListener("touchstart", onDown, {passive:false});
+}
+
+// call this whenever you refresh UI
+function showPatternFlyout() {
+  ensurePatternFlyout();
+  renderPatternPreview();
 }
 
 
@@ -587,7 +674,8 @@ window.addEventListener("DOMContentLoaded", () => {
     updateDisplays();
       // keep the preview in sync
   startPatternPreviewCycle();
-
+  showPatternFlyout();
+startPatternPreviewCycle();
   }
 });
 
