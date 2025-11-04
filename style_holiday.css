@@ -58,13 +58,13 @@ body::before {
 }
 
 @keyframes bulbsGlow {
-  0%, 100% { filter: drop-shadow(0 0 4px #fff) drop-shadow(0 0 10px var(--gold)); }
-  50%      { filter: drop-shadow(0 0 6px #fff) drop-shadow(0 0 16px #ff6aa2); }
+  0%, 100% { filter: drop-shadow(0 0 5px #fff) drop-shadow(0 0 12px #ffd166); }
+  50%      { filter: drop-shadow(0 0 7px #fff) drop-shadow(0 0 18px #ff6aa2); }
 }
 
 /* Reduced motion: keep the look, nix the glow animation */
 @media (prefers-reduced-motion: reduce) {
-  body::before { animation: none; }
+  #last-called::after { animation: none; }
 }
 
 /* ========= Global Layout Overrides ========= */
@@ -90,8 +90,33 @@ body::before {
   color: var(--snow);
   box-shadow: 0 6px 18px rgba(0,0,0,0.35), inset 0 0 12px rgba(255,255,255,0.08);
   transition: transform .15s ease, background .2s ease, color .2s ease;
+  position: relative;
 }
 #last-called.last-ball { transform: scale(1.03); }
+
+#last-called::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  top: calc(100% + 10px);         /* a bit below the ball */
+  width: min(1000px, 92vw);
+  height: 28px;                    /* bigger! */
+  z-index: 1;
+  /* wire + bulbs */
+  background:
+    /* wire */
+    linear-gradient(#2b3e36, #2b3e36) center/100% 3px no-repeat,
+    /* repeating bulbs line (slightly larger bulbs) */
+    radial-gradient(circle 8px, #ff5757 60%, transparent 61%) left 5% center/70px 100% repeat-x,
+    radial-gradient(circle 8px, #57ff9f 60%, transparent 61%) left 20% center/70px 100% repeat-x,
+    radial-gradient(circle 8px, #7ecbff 60%, transparent 61%) left 35% center/70px 100% repeat-x,
+    radial-gradient(circle 8px, #ffd166 60%, transparent 61%) left 50% center/70px 100% repeat-x,
+    radial-gradient(circle 8px, #ff85e6 60%, transparent 61%) left 65% center/70px 100% repeat-x,
+    radial-gradient(circle 8px, #a0ff66 60%, transparent 61%) left 80% center/70px 100% repeat-x;
+  animation: bulbsGlow 2.8s ease-in-out infinite;
+  opacity: 0.95;
+}
 
 /* Color-code like ornaments (B I N G O) */
 .called.B, #last-called.last-ball.B { background: #1f6bff; color: #fff; }
