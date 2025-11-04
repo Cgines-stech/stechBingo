@@ -7,6 +7,178 @@ const lastCalledDisplay = document.getElementById("last-called");
 const controlLastCalled = document.getElementById("control-last-called");
 const controlHistory = document.getElementById("control-history");
 
+// --- Pattern Engine ---------------------------------------------------------
+const P = {
+  // All straight lines (5 rows, 5 cols, 2 diags)
+  allLines() {
+    const lines = [];
+    // rows
+    for (let r = 0; r < 5; r++) lines.push([[r,0],[r,1],[r,2],[r,3],[r,4]]);
+    // cols
+    for (let c = 0; c < 5; c++) lines.push([[0,c],[1,c],[2,c],[3,c],[4,c]]);
+    // diags
+    lines.push([[0,0],[1,1],[2,2],[3,3],[4,4]]);
+    lines.push([[0,4],[1,3],[2,2],[3,1],[4,0]]);
+    return lines;
+  },
+  rowsOnly() {
+    const lines = [];
+    for (let r = 0; r < 5; r++) lines.push([[r,0],[r,1],[r,2],[r,3],[r,4]]);
+    return lines;
+  },
+  colsOnly() {
+    const lines = [];
+    for (let c = 0; c < 5; c++) lines.push([[0,c],[1,c],[2,c],[3,c],[4,c]]);
+    return lines;
+  },
+  fourCorners() {
+    return [[[0,0],[0,4],[4,0],[4,4]]];
+  },
+  insideSquare3x3() {
+    const cells = [];
+    for (let r = 1; r <= 3; r++) for (let c = 1; c <= 3; c++) cells.push([r,c]);
+    return [cells];
+  },
+  outsideSquareBorder() {
+    const cells = [];
+    for (let c = 0; c < 5; c++) { cells.push([0,c]); cells.push([4,c]); }
+    for (let r = 1; r < 4; r++) { cells.push([r,0]); cells.push([r,4]); }
+    return [cells];
+  },
+  layerCakeRows2and4() {
+    // Rows 1 and 3 in 0-based => visual rows 2 & 4
+    return [[[1,0],[1,1],[1,2],[1,3],[1,4],[3,0],[3,1],[3,2],[3,3],[3,4]]];
+  },
+  crazyKites() {
+    // 4 orientations; each is a "kite" (a diagonal of 5 plus a wing near one end)
+    // We'll define compact 5-cell diagonal + 1 wing; total 6 cells per orientation.
+    return [
+      // NE-SW diag with wing off the [0,0] end to the right
+      [[0,0],[1,1],[2,2],[3,3],[4,4],[0,1]],
+      // NE-SW with wing off the [4,4] end to the left
+      [[0,0],[1,1],[2,2],[3,3],[4,4],[4,3]],
+      // NW-SE diag with wing off the [0,4] end to the left
+      [[0,4],[1,3],[2,2],[3,1],[4,0],[0,3]],
+      // NW-SE with wing off the [4,0] end to the right
+      [[0,4],[1,3],[2,2],[3,1],[4,0],[4,1]],
+    ];
+  },
+  arrows() {
+    // 4 orientations of an arrow: a 5-cell straight line with a 3-cell head
+    const up = [
+      [4,2],[3,2],[2,2],[1,2],[0,2], // shaft up
+      [0,1],[0,3],[1,2]              // head (T-like near tip)
+    ];
+    const down = up.map(([r,c]) => [4-r,c]);
+    const left = [
+      [2,4],[2,3],[2,2],[2,1],[2,0], // shaft left
+      [1,0],[3,0],[2,1]              // head
+    ];
+    const right = left.map(([r,c]) => [r,4-c]);
+    return [up,down,left,right];
+  },
+  coverall() {
+    const cells = [];
+    for (let r = 0; r < 5; r++) for (let c = 0; c < 5; c++) cells.push([r,c]);
+    return [cells];
+  }
+};
+
+// Mark check; by default FREE (0) counts as marked.
+// For "hard way", FREE shouldn't give a freebie on a line; we require the center number to be called.
+function isMarkedNumber(num, called) {
+  return num === 0 || called.includes(num);
+}
+function isMarkedNumberHardWay(num, called) {
+  if (num === 0) return false; // free doesn't count
+  return called.includes(num);
+}
+
+// Return {won:boolean, winningSets: Array<Array<[r,c]>>}
+function evaluatePattern(card, called, patternKey) {
+  const get = (r,c) => card[r][c];
+
+  // build convenience matrix of booleans
+  const marked = card.map(row => row.map(num => isMarkedNumber(num, called)));
+  const markedHard = card.map(row => row.map(num => isMarkedNumberHardWay(num, called)));
+
+  const collectIfAllMarked = (sets, useHard = false) => {
+    const grid = useHard ? markedHard : marked;
+    const winners = [];
+    sets.forEach(set => {
+      if (set.every(([r,c]) => grid[r][c])) winners.push(set);
+    });
+    return winners;
+  };
+
+  switch (patternKey) {
+    case "anyLine": {
+      const winners = collectIfAllMarked(P.allLines());
+      return { won: winners.length > 0, winningSets: winners };
+    }
+    case "doubleBingo": {
+      const winners = collectIfAllMarked(P.allLines());
+      return { won: winners.length >= 2, winningSets: winners.slice(0,2) };
+    }
+    case "hardWay": {
+      // rows or cols only, center must be CALLED (not free)
+      const rc = [2,2];
+      if (!called.includes(get(...rc))) return { won:false, winningSets:[] };
+      const winners = [
+        ...collectIfAllMarked(P.rowsOnly(), true),
+        ...collectIfAllMarked(P.colsOnly(), true),
+      ];
+      return { won: winners.length > 0, winningSets: winners };
+    }
+    case "fourCorners": {
+      const winners = collectIfAllMarked(P.fourCorners());
+      return { won: winners.length > 0, winningSets: winners };
+    }
+    case "insideSquare": {
+      const winners = collectIfAllMarked(P.insideSquare3x3());
+      return { won: winners.length > 0, winningSets: winners };
+    }
+    case "outsideSquare": {
+      const winners = collectIfAllMarked(P.outsideSquareBorder());
+      return { won: winners.length > 0, winningSets: winners };
+    }
+    case "layerCake": {
+      const winners = collectIfAllMarked(P.layerCakeRows2and4());
+      return { won: winners.length > 0, winningSets: winners };
+    }
+    case "crazyKite": {
+      const winners = collectIfAllMarked(P.crazyKites());
+      return { won: winners.length > 0, winningSets: winners };
+    }
+    case "arrow": {
+      const winners = collectIfAllMarked(P.arrows());
+      return { won: winners.length > 0, winningSets: winners };
+    }
+    case "coverall": {
+      const winners = collectIfAllMarked(P.coverall());
+      return { won: winners.length > 0, winningSets: winners };
+    }
+    default: { // fallback to classic
+      const winners = collectIfAllMarked(P.allLines());
+      return { won: winners.length > 0, winningSets: winners };
+    }
+  }
+}
+
+// convenience for UI text
+const PATTERN_LABELS = {
+  anyLine: "Any Line (Row/Col/Diag)",
+  doubleBingo: "Double Bingo",
+  hardWay: "Hard Way",
+  fourCorners: "Four Corners",
+  insideSquare: "Inside Square (3×3)",
+  outsideSquare: "Outside Square (Border)",
+  layerCake: "Layer Cake (Rows 2 & 4)",
+  crazyKite: "Crazy Kite",
+  arrow: "Arrow",
+  coverall: "Coverall",
+};
+
 function getState() {
   return JSON.parse(localStorage.getItem("bingoState") || "{}");
 }
@@ -21,6 +193,24 @@ function setState(state) {
   state.winners = winners;
   localStorage.setItem("bingoState", JSON.stringify(state));
   updateDisplays();
+}
+
+function applySelectedPattern() {
+  const sel = document.getElementById("pattern-select");
+  if (!sel) return;
+  const value = sel.value;
+  const state = getState();
+  state.currentPattern = value;
+  setState(state); // re-evaluate winners for this pattern
+}
+
+function syncPatternUI() {
+  const state = getState();
+  const banner = document.getElementById("pattern-display");
+  if (banner) banner.textContent = PATTERN_LABELS[state.currentPattern] || state.currentPattern;
+
+  const sel = document.getElementById("pattern-select");
+  if (sel) sel.value = state.currentPattern;
 }
 
 
@@ -78,21 +268,10 @@ function renderCard(cardId) {
   const state = getState();
   const called = state.calledNumbers || [];
 
-  const isMarked = (num) => num === 0 || called.includes(num);
-  const winners = [];
-
-  for (let r = 0; r < 5; r++) {
-    if (card[r].every(isMarked)) winners.push({ type: 'row', index: r });
-  }
-  for (let c = 0; c < 5; c++) {
-    if (card.every(row => isMarked(row[c]))) winners.push({ type: 'col', index: c });
-  }
-  if ([0, 1, 2, 3, 4].every(i => isMarked(card[i][i]))) {
-    winners.push({ type: 'diag', main: true });
-  }
-  if ([0, 1, 2, 3, 4].every(i => isMarked(card[i][4 - i]))) {
-    winners.push({ type: 'diag', main: false });
-  }
+  const { winningSets } = evaluatePattern(card, called, state.currentPattern);
+  const winningCells = new Set(
+    winningSets.flat().map(([r,c]) => `${r},${c}`)
+  );
 
   cardContainer.innerHTML = `<h2>Card ${cardId}</h2><div class="card-grid"></div>`;
   const grid = cardContainer.querySelector(".card-grid");
@@ -103,17 +282,11 @@ function renderCard(cardId) {
       const cell = document.createElement("div");
       let classList = "card-cell";
 
-      if (num === 0 || called.includes(num)) classList += " marked";
+      // Marked?
+      if (isMarkedNumber(num, called)) classList += " marked";
 
-      if (
-        winners.some(w =>
-          (w.type === 'row' && w.index === r) ||
-          (w.type === 'col' && w.index === c) ||
-          (w.type === 'diag' && ((w.main && r === c) || (!w.main && r + c === 4)))
-        )
-      ) {
-        classList += " winner";
-      }
+      // Winner cell?
+      if (winningCells.has(`${r},${c}`)) classList += " winner";
 
       cell.className = classList;
       cell.textContent = num === 0 ? "" : num;
@@ -121,6 +294,7 @@ function renderCard(cardId) {
     }
   }
 }
+
 
 function renderAllCards(container, calledNumbers) {
   container.innerHTML = "";
@@ -227,16 +401,19 @@ function updateDisplays() {
   }
 
   // === Winner List ===
-  const winnerList = document.getElementById("winner-list");
-  if (winnerList && state.winners) {
-    winnerList.innerHTML = "";
-    const sorted = Object.entries(state.winners).sort((a, b) => a[1] - b[1]);
-    for (let [cardId, drawCount] of sorted) {
-      const li = document.createElement("li");
-      li.textContent = `Card ${cardId}: ${drawCount} draws`;
-      winnerList.appendChild(li);
-    }
+const winnerList = document.getElementById("winner-list");
+if (winnerList) {
+  winnerList.innerHTML = "";
+  const pattern = state.currentPattern || "anyLine";
+  const winners = (state.winnersByPattern && state.winnersByPattern[pattern]) || {};
+  const sorted = Object.entries(winners).sort((a, b) => a[1] - b[1]);
+  for (let [cardId, drawCount] of sorted) {
+    const li = document.createElement("li");
+    li.textContent = `Card ${cardId}: ${drawCount} draws (${PATTERN_LABELS[pattern] || pattern})`;
+    winnerList.appendChild(li);
   }
+}
+
 
   // === View Toggles ===
   const cardView = document.getElementById("card-view");
@@ -293,29 +470,28 @@ function updateDisplays() {
       }
 
       gridView.appendChild(row);
+      // keep pattern banner & control select in sync
+      syncPatternUI();
+
     });
   }
 }
 
 function hasBingo(card, called) {
-  const marked = card.map(row => row.map(num => num === 0 || called.includes(num)));
+  const state = getState();
+  return evaluatePattern(card, called, state.currentPattern).won;
+}
 
-  // Rows
-  for (let r = 0; r < 5; r++) {
-    if (marked[r].every(Boolean)) return true;
-  }
-
-  // Columns
-  for (let c = 0; c < 5; c++) {
-    if (marked.every(row => row[c])) return true;
-  }
-
-  // Diagonals
-  if (marked.every((row, i) => row[i])) return true;
-  if (marked.every((row, i) => row[4 - i])) return true;
-
-  return false;
-} 
 
 window.addEventListener("storage", updateDisplays);
-window.addEventListener("DOMContentLoaded", updateDisplays);
+window.addEventListener("DOMContentLoaded", () => {
+  // Initialize default pattern on first-ever run
+  const state = getState();
+  if (!state.currentPattern) {
+    state.currentPattern = "anyLine";
+    setState(state);
+  } else {
+    updateDisplays();
+  }
+});
+

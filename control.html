@@ -11,6 +11,23 @@
 <body class="control-panel">
   <h1 class="glow-title">🎮 Control Panel</h1>
 
+  <div class="panel-row">
+  <label for="pattern-select" style="align-self:center">Pattern:</label>
+  <select id="pattern-select" class="pattern-select">
+    <option value="anyLine">Any Line (Row/Col/Diag)</option>
+    <option value="doubleBingo">Double Bingo (2 lines)</option>
+    <option value="hardWay">Hard Way (rows/cols, center must be called)</option>
+    <option value="fourCorners">Four Corners</option>
+    <option value="insideSquare">Inside Square (3×3)</option>
+    <option value="outsideSquare">Outside Square (border)</option>
+    <option value="layerCake">Layer Cake (rows 2 & 4)</option>
+    <option value="crazyKite">Crazy Kite (any orientation)</option>
+    <option value="arrow">Arrow (any orientation)</option>
+    <option value="coverall">Coverall</option>
+  </select>
+  <button class="btn neon" onclick="applySelectedPattern()">Set Pattern</button>
+  </div>
+
   <div class="control-layout">
     <div class="left-controls">
       <!-- All your existing control content here -->
