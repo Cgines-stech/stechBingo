@@ -1,13 +1,11 @@
 /* style_holiday.css  — Holiday refresh (lightweight) */
 
 /* 1) Font: Mountains of Christmas for headings/accents */
-@import url('https://unsplash.com/photos/a-close-up-of-a-christmas-tree-with-ornaments-f6WVFXbcyuo');
+@import url('https://fonts.googleapis.com/css2?family=Mountains+of+Christmas:wght@400;700&display=swap');
 
-/* 2) Theme variables (easy to tweak) */
 :root {
-  /* swap the background image here: */
-  --holiday-bg: url('/images/unsplash.jpg');
-  --overlay: rgba(0, 0, 0, 0.35);   /* darken for contrast */
+  --holiday-bg: url('images/unsplash.jpg');  /* adjust ../ if needed */
+  --overlay: rgba(0,0,0,0.18);
   --gold: #ffd166;
   --green: #2e7d6b;
   --green-light: #3fc7a3;
@@ -15,19 +13,13 @@
   --white: #ffffff;
 }
 
-/* ===== Page background ===== */
 body {
-  font-family: 'Segoe UI', system-ui, -apple-system, Roboto, 'Helvetica Neue', Arial, 'Noto Sans', 'Liberation Sans', 'Courier New', monospace;
-  text-align: center;
-  padding: 20px;
-  color: var(--white);
-
-  /* Background image with subtle overlay for readability */
   background:
     linear-gradient(var(--overlay), var(--overlay)),
     var(--holiday-bg) center/cover no-repeat fixed;
-  min-height: 100vh;
+  /* rest of your body styles... */
 }
+
 
 /* Headings & accents use the holiday font */
 h1, h2, h3, .glow-title, #pattern-banner label, .announce-letter {
