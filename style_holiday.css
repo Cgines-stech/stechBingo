@@ -31,31 +31,88 @@ body {
 }
 
 /* ===== Festive falling snowflakes (red, green, gold, white) ===== */
-body::before {
+/* ===== Festive multi-layer snowflakes (varied sizes + holiday colors) ===== */
+body::before,
+body::after,
+body::backdrop {
   content: "";
   position: fixed;
-  inset: -10% -10%;
+  inset: -20% -20%;
   pointer-events: none;
   z-index: 0;
-  opacity: 0.6;
-  background-image:
-    radial-gradient(3px 3px at 10% 20%, rgba(255,255,255,0.95) 60%, transparent 61%),
-    radial-gradient(2.5px 2.5px at 30% 70%, rgba(255,215,0,0.9) 60%, transparent 61%),  /* gold */
-    radial-gradient(3px 3px at 50% 10%, rgba(255,59,59,0.9) 60%, transparent 61%),       /* red */
-    radial-gradient(2.5px 2.5px at 70% 60%, rgba(79,220,113,0.9) 60%, transparent 61%), /* green */
-    radial-gradient(2px 2px at 85% 35%, rgba(255,255,255,0.9) 60%, transparent 61%),    /* white */
-    radial-gradient(2.5px 2.5px at 15% 90%, rgba(255,215,0,0.9) 60%, transparent 61%),  /* gold */
-    radial-gradient(2px 2px at 60% 45%, rgba(255,59,59,0.85) 60%, transparent 61%),     /* red */
-    radial-gradient(2px 2px at 40% 85%, rgba(79,220,113,0.85) 60%, transparent 61%);    /* green */
+  animation: snowfall 35s linear infinite;
+  opacity: 0.65;
   background-repeat: repeat;
-  background-size: 300px 300px;
-  animation: snowfall 28s linear infinite;
+}
+
+/* Back layer: larger, slower flakes */
+body::before {
+  background-image:
+    radial-gradient(4px 4px at 10% 20%, rgba(255,255,255,0.9) 70%, transparent 71%),
+    radial-gradient(5px 5px at 50% 10%, rgba(255,215,0,0.9) 70%, transparent 71%), /* gold */
+    radial-gradient(4.5px 4.5px at 70% 60%, rgba(255,59,59,0.9) 70%, transparent 71%), /* red */
+    radial-gradient(5px 5px at 85% 35%, rgba(79,220,113,0.9) 70%, transparent 71%); /* green */
+  background-size: 400px 400px;
+  animation-duration: 45s;
+  animation-delay: 0s;
+}
+
+/* Middle layer: medium flakes, moderate speed */
+body::after {
+  background-image:
+    radial-gradient(3.5px 3.5px at 15% 70%, rgba(255,255,255,0.9) 70%, transparent 71%),
+    radial-gradient(3px 3px at 40% 40%, rgba(255,215,0,0.9) 70%, transparent 71%), /* gold */
+    radial-gradient(2.8px 2.8px at 65% 85%, rgba(255,59,59,0.9) 70%, transparent 71%), /* red */
+    radial-gradient(3.2px 3.2px at 80% 25%, rgba(79,220,113,0.9) 70%, transparent 71%); /* green */
+  background-size: 280px 280px;
+  animation-duration: 30s;
+  animation-delay: -5s;
+}
+
+/* Front layer: smaller, faster flakes */
+body::backdrop {
+  background-image:
+    radial-gradient(2.5px 2.5px at 25% 50%, rgba(255,255,255,0.9) 70%, transparent 71%),
+    radial-gradient(2.2px 2.2px at 55% 15%, rgba(255,215,0,0.85) 70%, transparent 71%), /* gold */
+    radial-gradient(2px 2px at 75% 75%, rgba(255,59,59,0.8) 70%, transparent 71%), /* red */
+    radial-gradient(2px 2px at 90% 40%, rgba(79,220,113,0.8) 70%, transparent 71%); /* green */
+  background-size: 200px 200px;
+  animation-duration: 20s;
+  animation-delay: -10s;
 }
 
 @keyframes snowfall {
-  0%   { transform: translateY(-80px) translateX(0); }
-  100% { transform: translateY(320px) translateX(-120px); }
+  0% {
+    transform: translateY(-100px) translateX(0);
+  }
+  100% {
+    transform: translateY(400px) translateX(-150px);
+  }
 }
+
+/* ===== Twinkle animation for random flakes ===== */
+@keyframes sparkle {
+  0%, 100% {
+    filter: drop-shadow(0 0 0px rgba(255,255,255,0));
+    opacity: 1;
+  }
+  50% {
+    filter: drop-shadow(0 0 6px rgba(255,255,255,0.9));
+    opacity: 0.9;
+  }
+}
+
+/* apply sparkle to a subset of snow layers */
+body::before {
+  animation: snowfall 45s linear infinite, sparkle 5s ease-in-out infinite;
+}
+body::after {
+  animation: snowfall 30s linear infinite, sparkle 6s ease-in-out infinite;
+}
+body::backdrop {
+  animation: snowfall 20s linear infinite, sparkle 4.5s ease-in-out infinite;
+}
+
 
 /* Respect reduced motion, but keep the look */
 @media (prefers-reduced-motion: reduce) {
