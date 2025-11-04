@@ -121,15 +121,17 @@ function evaluatePattern(card, called, patternKey) {
       return { won: winners.length >= 2, winningSets: winners.slice(0,2) };
     }
     case "hardWay": {
-      // rows or cols only, center must be CALLED (not free)
-      const rc = [2,2];
-      if (!called.includes(get(...rc))) return { won:false, winningSets:[] };
-      const winners = [
-        ...collectIfAllMarked(P.rowsOnly(), true),
-        ...collectIfAllMarked(P.colsOnly(), true),
-      ];
-      return { won: winners.length > 0, winningSets: winners };
-    }
+  // rows or cols only; center (2,2) does NOT help. Require all other cells in the line.
+  const removeCenter = set => set.filter(([r,c]) => !(r === 2 && c === 2));
+  const rowSets = P.rowsOnly().map(removeCenter);
+  const colSets = P.colsOnly().map(removeCenter);
+  const winners = [
+    ...collectIfAllMarked(rowSets, true),  // useHard => free doesn't count anywhere
+    ...collectIfAllMarked(colSets, true),
+  ];
+  return { won: winners.length > 0, winningSets: winners };
+}
+
     case "fourCorners": {
       const winners = collectIfAllMarked(P.fourCorners());
       return { won: winners.length > 0, winningSets: winners };
@@ -180,17 +182,26 @@ const PATTERN_LABELS = {
 };
 
 function getState() {
-  return JSON.parse(localStorage.getItem("bingoState") || "{}");
+  const s = JSON.parse(localStorage.getItem("bingoState") || "{}");
+  if (!s.currentPattern) s.currentPattern = "anyLine";
+  if (!s.winnersByPattern) s.winnersByPattern = {}; // { [pattern]: { [cardId]: drawCount } }
+  if (!s.calledNumbers) s.calledNumbers = [];
+  return s;
 }
 
 function setState(state) {
-  const winners = state.winners || {};
+  const pattern = state.currentPattern || "anyLine";
+  if (!state.winnersByPattern) state.winnersByPattern = {};
+  const winners = state.winnersByPattern[pattern] || {};
+
   for (const [id, card] of Object.entries(cardData)) {
-    if (!winners[id] && hasBingo(card, state.calledNumbers || [])) {
-      winners[id] = state.calledNumbers.length;
+    const { won } = evaluatePattern(card, state.calledNumbers || [], pattern);
+    if (won && !winners[id]) {
+      winners[id] = (state.calledNumbers || []).length; // first time achieved
     }
   }
-  state.winners = winners;
+
+  state.winnersByPattern[pattern] = winners;
   localStorage.setItem("bingoState", JSON.stringify(state));
   updateDisplays();
 }
@@ -437,44 +448,47 @@ if (winnerList) {
 
     renderAllCards(allCardsContainer, state.calledNumbers || []);
 
-  } else if (gridView) {
-    cardView?.classList.add("hidden");
-    allCardsContainer?.classList.add("hidden");
-    gridView.classList.remove("hidden");
+// === View: Grid ===
+} else if (gridView) {
+  cardView?.classList.add("hidden");
+  allCardsContainer?.classList.add("hidden");
+  gridView.classList.remove("hidden");
 
-    // Re-render grid
-    gridView.innerHTML = "";
-    const ranges = [
-      { label: 'B', start: 1, end: 15, class: 'B' },
-      { label: 'I', start: 16, end: 30, class: 'I' },
-      { label: 'N', start: 31, end: 45, class: 'N' },
-      { label: 'G', start: 46, end: 60, class: 'G' },
-      { label: 'O', start: 61, end: 75, class: 'O' },
-    ];
+  // Re-render grid
+  gridView.innerHTML = "";
+  const ranges = [
+    { label: 'B', start: 1,  end: 15, class: 'B' },
+    { label: 'I', start: 16, end: 30, class: 'I' },
+    { label: 'N', start: 31, end: 45, class: 'N' },
+    { label: 'G', start: 46, end: 60, class: 'G' },
+    { label: 'O', start: 61, end: 75, class: 'O' },
+  ];
 
-    ranges.forEach(range => {
-      const row = document.createElement("div");
-      row.className = `grid-row ${range.class}`;
-      const label = document.createElement("div");
-      label.className = "row-label";
-      label.textContent = range.label;
-      row.appendChild(label);
+  ranges.forEach(range => {
+    const row = document.createElement("div");
+    row.className = `grid-row ${range.class}`;
 
-      for (let i = range.start; i <= range.end; i++) {
-        const div = document.createElement("div");
-        let classList = "number";
-        if (state.calledNumbers?.includes(i)) classList += ` called ${range.class}`;
-        div.className = classList;
-        div.textContent = i;
-        row.appendChild(div);
-      }
+    const label = document.createElement("div");
+    label.className = "row-label";
+    label.textContent = range.label;
+    row.appendChild(label);
 
-      gridView.appendChild(row);
-      // keep pattern banner & control select in sync
-      syncPatternUI();
+    for (let i = range.start; i <= range.end; i++) {
+      const div = document.createElement("div");
+      let classList = "number";
+      if (state.calledNumbers?.includes(i)) classList += ` called ${range.class}`;
+      div.className = classList;
+      div.textContent = i;
+      row.appendChild(div);
+    }
 
-    });
-  }
+    gridView.appendChild(row);
+  });
+
+  // ✅ Do this once, after building the grid
+  syncPatternUI();
+}
+
 }
 
 function hasBingo(card, called) {
