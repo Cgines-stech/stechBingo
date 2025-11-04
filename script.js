@@ -226,18 +226,14 @@ function getPatternSetsForPreview(patternKey) {
 }
 
 function renderPatternPreview() {
-  const targets = [
-    document.getElementById("pattern-preview"),
-    document.getElementById("pattern-preview-flyout")
-  ].filter(Boolean); // whichever exist
-
-  if (targets.length === 0) return;
+  const target = document.getElementById("pattern-preview-flyout");
+  if (!target) return;
 
   const state = getState();
   const key = state.currentPattern || "anyLine";
   const sets = getPatternSetsForPreview(key);
   if (!sets || sets.length === 0) {
-    targets.forEach(t => t.innerHTML = "");
+    target.innerHTML = "";
     return;
   }
 
@@ -260,8 +256,9 @@ function renderPatternPreview() {
   }
   html += `</div>`;
 
-  targets.forEach(t => (t.innerHTML = html));
+  target.innerHTML = html;
 }
+
 
 
 function startPatternPreviewCycle() {
@@ -432,6 +429,7 @@ function ensurePatternFlyout() {
 
   makeDraggable(fly, fly.querySelector(".pf-drag-handle"));
 }
+
 
 
 function makeDraggable(el, handle) {
@@ -674,8 +672,7 @@ window.addEventListener("DOMContentLoaded", () => {
     setState(state);
   } else {
     updateDisplays();
-    showPatternFlyout();        // create the flyout (with unique id inside)
-    startPatternPreviewCycle(); // start once
+    showPatternFlyout();        // creates the draggable window
+    startPatternPreviewCycle(); // start the rotation once
   }
 });
-
