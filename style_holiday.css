@@ -7,7 +7,7 @@
 /* 2) Theme variables (easy to tweak) */
 :root {
   /* swap the background image here: */
-  --holiday-bg: url('https://images.unsplash.com/photo-1485451456034-3f9391c6d9a9?q=80&w=1920&auto=format&fit=crop'); /* snowy trees */
+  --holiday-bg: url('/images/unsplash.jpg');
   --overlay: rgba(0, 0, 0, 0.35);   /* darken for contrast */
   --gold: #ffd166;
   --green: #2e7d6b;
