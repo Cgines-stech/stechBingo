@@ -125,7 +125,7 @@ body {
     #c13025 20px
   );
   color: #fff;
-  border: 2px solid #c13025;
+  /* border: 2px solid #c13025; */
   box-shadow: 0 0 10px rgba(193, 48, 37, 0.4);
   text-shadow: 1px 1px 2px #304e35;
   overflow: hidden; /* ensures ribbons don’t extend out */
