@@ -1,5 +1,5 @@
 /* print-style.css */
-@import url('https://fonts.googleapis.com/css2?family=Rye&family=Rock+Salt&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Mountains+of+Christmas:wght@400;700&display=swap');
 
 @media print {
   @page {
@@ -7,102 +7,102 @@
     margin: 0;
   }
 
-body::before {
-  content: "";
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background-image: url('./images/image002.png');
-  background-size: 100% 100%;
-  background-position: center;
-  background-repeat: no-repeat;
-  z-index: -1;
-}
+  body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-image: url('./images/image002.png');
+    background-size: 100% 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+    z-index: -1;
+  }
 
-body {
-  margin: 0;
-  padding: 0;
-  background-color: white;
-  font-family: 'Rye', cursive;
-  -webkit-print-color-adjust: exact;
-  print-color-adjust: exact;
-}
+  body {
+    margin: 0;
+    padding: 0;
+    background-color: white;
+    font-family: 'Mountains of Christmas', cursive;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+    font-synthesis: none;
+  }
 
-.print-wrapper {
-  display: flex;
-  flex-direction: column;
-  height: 100vh;
-  margin-right: 120px;
-  justify-content: space-between;
-  position: relative;
-  page-break-after: always;
-}
+  .print-wrapper {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    margin-right: 120px;
+    justify-content: space-between;
+    position: relative;
+    page-break-after: always;
+  }
 
+  .print-card {
+    width: 100%;
+    height: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    page-break-inside: avoid;
+    overflow: hidden;
+    position: relative;
+  }
 
-.print-card {
-  width: 100%;
-  height: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  page-break-inside: avoid;
-  overflow: hidden;
-  position: relative;
-}
+  .print-card-inner {
+    transform: rotate(-90deg);
+    transform-origin: center center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    width: 4in;
+    height: 4in;
+    position: relative;
+    z-index: 1; /* ✅ sits above background */
+  }
 
-.print-card-inner {
-  transform: rotate(-90deg);
-  transform-origin: center center;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
-  width: 4in;
-  height: 4in;
-  position: relative;
-  z-index: 1; /* ✅ sits above background */
-}
-
-.print-card-inner h2 {
-  font-family: 'Rye', cursive;
-  font-size: 1.1rem; /* card id */
-  font-weight: bold;
-  padding: 4px 8px;
-  border: 2px solid #000;
-  border-radius: 4px;
-  background: #fff;
-  margin: 0 0 8px 0; /* margin below */
-  align-self: flex-end;
-}
+  .print-card-inner h2 {
+    font-family: 'Mountains of Christmas', cursive;
+    font-size: 1.1rem; /* card id */
+    font-weight: bold;
+    padding: 4px 8px;
+    border: 2px solid #000;
+    border-radius: 4px;
+    background: #fff;
+    margin: 0 0 8px 0; /* margin below */
+    align-self: flex-end;
+  }
 
   .print-grid {
-  display: grid;
-  grid-template-columns: repeat(5, 0.75in);
-  grid-template-rows: repeat(6, 0.75in); /* 5 rows + 1 header row */
-  gap: 0.05in;
-  justify-content: center;
-}
+    display: grid;
+    grid-template-columns: repeat(5, 0.75in);
+    grid-template-rows: repeat(6, 0.75in); /* 5 rows + 1 header row */
+    gap: 0.05in;
+    justify-content: center;
+  }
 
   .print-cell {
-  width: 0.75in;
-  height: 0.75in;
-  border: 1px solid #000; 
-  font-size: 1.6rem; /* card numbers */
-  font-weight: bold;
-  text-align: center;
-  font-family: 'Rye', cursive;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-sizing: border-box;
-}
+    width: 0.75in;
+    height: 0.75in;
+    border: 1px solid #000; 
+    font-size: 1.6rem; /* card numbers */
+    font-weight: bold;
+    text-align: center;
+    font-family: 'Mountains of Christmas', cursive;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+  }
 
   .print-cell.header {
     border: none;
     font-size: 2.6rem;
-    font-family: 'Rye', cursive;
+    font-family: 'Mountains of Christmas', cursive;
   }
 
   .cut-line {
@@ -116,19 +116,19 @@ body {
   }
 
   .print-cell.free {
-  position: relative;
-  background: repeating-linear-gradient(
-    45deg,
-    #304e35,
-    #304e35 10px,
-    #c13025 10px,
-    #c13025 20px
-  );
-  color: #fff;
-  /* border: 2px solid #c13025; */
-  box-shadow: 0 0 10px rgba(193, 48, 37, 0.4);
-  text-shadow: 1px 1px 2px #304e35;
-  overflow: hidden; /* ensures ribbons don’t extend out */
+    position: relative;
+    background: repeating-linear-gradient(
+      45deg,
+      #304e35,
+      #304e35 10px,
+      #c13025 10px,
+      #c13025 20px
+    );
+    color: #fff;
+    /* border: 2px solid #c13025; */
+    box-shadow: 0 0 10px rgba(193, 48, 37, 0.4);
+    text-shadow: 1px 1px 2px #304e35;
+    overflow: hidden; /* ensures ribbons don’t extend out */
   }
 
   /* vertical ribbon */
@@ -156,5 +156,4 @@ body {
     transform: translateY(-50%);
     box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
   }
-
 }
