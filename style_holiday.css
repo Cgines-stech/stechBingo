@@ -72,6 +72,7 @@ body::after {
   100% { transform: translateY(300px) translateX(-100px); }
 }
 
+
 /* Festive headings */
 h1, h2, h3, .glow-title, #pattern-banner label, .announce-letter {
   font-family: 'Mountains of Christmas', cursive;
