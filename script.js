@@ -181,6 +181,85 @@ const PATTERN_LABELS = {
   coverall: "Coverall",
 };
 
+// --- Pattern Preview ---------------------------------------------------------
+let previewIndex = 0;
+let previewTimer = null;
+
+function getPatternSetsForPreview(patternKey) {
+  // Return an array of "sets"; each set is an array of [r,c] cells to highlight
+  switch (patternKey) {
+    case "anyLine":       return P.allLines();
+    case "doubleBingo":   return P.allLines(); // show one line at a time; note says "need two"
+    case "hardWay": {
+      const removeCenter = set => set.filter(([r,c]) => !(r===2 && c===2));
+      return [
+        ...P.rowsOnly().map(removeCenter),
+        ...P.colsOnly().map(removeCenter),
+      ];
+    }
+    case "fourCorners":    return P.fourCorners();
+    case "insideSquare":   return P.insideSquare3x3();
+    case "outsideSquare":  return P.outsideSquareBorder();
+    case "layerCake":      return P.layerCakeRows2and4();
+    case "crazyKite":      return P.crazyKites();
+    case "arrow":          return P.arrows();
+    case "coverall":       return P.coverall();
+    default:               return P.allLines();
+  }
+}
+
+function renderPatternPreview() {
+  const container = document.getElementById("pattern-preview");
+  if (!container) return;
+
+  const state = getState();
+  const key = state.currentPattern || "anyLine";
+  const sets = getPatternSetsForPreview(key);
+  if (!sets || sets.length === 0) {
+    container.innerHTML = "";
+    return;
+  }
+
+  const idx = sets.length > 0 ? (previewIndex % sets.length) : 0;
+  const active = sets[idx] || [];
+  const isDouble = key === "doubleBingo";
+
+  let html = `
+    <div class="preview-title">${PATTERN_LABELS[key] || key}</div>
+    ${isDouble ? '<div class="preview-note">Win with any <strong>two</strong> lines.</div>' : ''}
+    <div class="mini-card">
+  `;
+
+  for (let r = 0; r < 5; r++) {
+    for (let c = 0; c < 5; c++) {
+      const on = active.some(([rr,cc]) => rr === r && cc === c);
+      const isFree = (r === 2 && c === 2);
+      html += `<div class="mini-cell${on ? ' on' : ''}${isFree ? ' free' : ''}"></div>`;
+    }
+  }
+
+  html += `</div>`;
+  container.innerHTML = html;
+}
+
+function startPatternPreviewCycle() {
+  // Clear any existing loop
+  if (previewTimer) clearInterval(previewTimer);
+  previewIndex = 0;
+
+  const state = getState();
+  const sets = getPatternSetsForPreview(state.currentPattern || "anyLine");
+  renderPatternPreview();
+
+  // Single-shape patterns don't need rotation
+  if (!sets || sets.length <= 1) return;
+
+  previewTimer = setInterval(() => {
+    previewIndex++;
+    renderPatternPreview();
+  }, 1400); // rotate every 1.4s; tweak to taste
+}
+
 function getState() {
   const s = JSON.parse(localStorage.getItem("bingoState") || "{}");
   if (!s.currentPattern) s.currentPattern = "anyLine";
@@ -506,6 +585,9 @@ window.addEventListener("DOMContentLoaded", () => {
     setState(state);
   } else {
     updateDisplays();
+      // keep the preview in sync
+  startPatternPreviewCycle();
+
   }
 });
 
