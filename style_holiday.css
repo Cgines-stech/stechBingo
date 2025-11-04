@@ -1,45 +1,52 @@
-/* style_holiday.css  — Holiday refresh (lightweight) */
+/* style_holiday.css — simple holiday theme */
 
-/* 1) Font: Mountains of Christmas for headings/accents */
+/* Festive font */
 @import url('https://fonts.googleapis.com/css2?family=Mountains+of+Christmas:wght@400;700&display=swap');
 
 :root {
-  --holiday-bg: url('images/unsplash.jpg');  /* adjust ../ if needed */
-  --overlay: rgba(0,0,0,0.18);
-  --gold: #ffd166;
+  --background-top: #faf9f7;
+  --background-bottom: #f0f5f9;
+  --gold: #d4af37;
   --green: #2e7d6b;
-  --green-light: #3fc7a3;
+  --green-light: #45c99a;
   --ink: #0c3027;
   --white: #ffffff;
 }
 
+/* ===== Page background ===== */
 body {
+  font-family: 'Segoe UI', system-ui, -apple-system, Roboto, 'Helvetica Neue', Arial, sans-serif;
+  text-align: center;
+  padding: 20px;
+  color: var(--ink);
+
+  /* light, wintery background gradient with subtle sparkle */
   background:
-    linear-gradient(var(--overlay), var(--overlay)),
-    var(--holiday-bg) center/cover no-repeat fixed;
-  /* rest of your body styles... */
+    radial-gradient(circle at 20% 20%, #ffffff 0%, transparent 35%),
+    radial-gradient(circle at 80% 40%, #ffffff 0%, transparent 30%),
+    linear-gradient(180deg, var(--background-top), var(--background-bottom));
+  min-height: 100vh;
+  background-attachment: fixed;
 }
 
-
-/* Headings & accents use the holiday font */
+/* Festive headings */
 h1, h2, h3, .glow-title, #pattern-banner label, .announce-letter {
   font-family: 'Mountains of Christmas', cursive;
   letter-spacing: .5px;
+  color: var(--green);
+  text-shadow: 0 0 5px rgba(0,0,0,0.1);
 }
 
-/* ===== Light animations (performance-friendly) ===== */
+/* Soft twinkle animation for subtle movement */
 @keyframes twinkle {
-  0%, 100% { filter: drop-shadow(0 0 2px rgba(255,255,255,0.6)); opacity: 1; }
-  50%      { filter: drop-shadow(0 0 6px rgba(255,255,255,0.9)); opacity: 0.88; }
+  0%, 100% { opacity: 1; filter: brightness(1); }
+  50% { opacity: 0.85; filter: brightness(1.15); }
 }
 
+/* Subtle entry pop for called numbers */
 @keyframes popIn {
-  0%   { transform: scale(0.94); opacity: 0.7; }
-  100% { transform: scale(1);     opacity: 1; }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  * { animation: none !important; transition: none !important; }
+  0% { transform: scale(0.9); opacity: 0.7; }
+  100% { transform: scale(1); opacity: 1; }
 }
 
 /* ===== “Last called” ball ===== */
@@ -51,30 +58,18 @@ h1, h2, h3, .glow-title, #pattern-banner label, .announce-letter {
   margin: 26px auto 12px;
   font-size: 2.6rem;
   font-weight: 700;
-  background: rgba(255,255,255,0.12);
+  background: var(--green-light);
   color: #fff;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.25), inset 0 0 10px rgba(255,255,255,0.08);
-  transition: transform .12s ease, background .2s ease;
-  animation: twinkle 2.4s ease-in-out infinite;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+  animation: twinkle 2.5s ease-in-out infinite;
 }
-#last-called.last-ball { transform: scale(1.02); }
 
-/* keep your B I N G O color mapping, looks nice on the photo */
-.called.B, #last-called.last-ball.B { background: #1f6bff; color: #fff; }
+/* BINGO color palette */
+.called.B, #last-called.last-ball.B { background: #3c91ff; color: #fff; }
 .called.I, #last-called.last-ball.I { background: #ffd54f; color: #3b2b00; }
 .called.N, #last-called.last-ball.N { background: #ff9800; color: #fff; }
 .called.G, #last-called.last-ball.G { background: #48c774; color: #fff; }
 .called.O, #last-called.last-ball.O { background: #9c27b0; color: #fff; }
-
-/* ===== Pattern banner (if present) ===== */
-#pattern-banner { gap: 8px; margin-top: 6px; color: var(--gold); }
-#pattern-banner label { font-weight: 700; }
-#pattern-display {
-  padding: 3px 8px;
-  border-radius: 999px;
-  background: rgba(255,255,255,0.15);
-  border: 1px solid rgba(255,255,255,0.25);
-}
 
 /* ===== Number grid ===== */
 .view {
@@ -85,8 +80,6 @@ h1, h2, h3, .glow-title, #pattern-banner label, .announce-letter {
   margin: 16px auto;
 }
 
-.grid-row { display: flex; justify-content: center; margin: 6px 0; }
-
 .row-label {
   width: 60px;
   font-weight: 700;
@@ -94,154 +87,70 @@ h1, h2, h3, .glow-title, #pattern-banner label, .announce-letter {
   font-size: 2rem;
   line-height: 60px;
   color: var(--gold);
-  text-shadow: 0 0 6px rgba(255,209,102,0.55);
   font-family: 'Mountains of Christmas', cursive;
 }
 
 .number {
   width: 60px; height: 60px; line-height: 60px;
   margin: 2px; border-radius: 50%;
-  background: rgba(255,255,255,0.85);
+  background: #ffffff;
   color: var(--ink);
   font-size: 1.35rem; font-weight: 800;
   text-align: center;
-  transition: transform .08s ease, box-shadow .12s ease, background .15s ease, color .15s ease;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.18);
+  transition: transform .08s ease, background .15s ease;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
 }
 .number:hover { transform: translateY(-1px); }
+.called { animation: popIn .16s ease; box-shadow: 0 3px 8px rgba(0,0,0,0.15); color: #fff; }
 
-/* Called numbers “pop” lightly */
-.called {
-  animation: popIn .16s ease;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.25);
-  color: #fff;
-}
-
-/* ===== Single card ===== */
-.card-grid {
-  display: grid;
-  grid-template-columns: repeat(5, 60px);
-  gap: 8px;
-  margin-top: 16px;
-}
-
+/* ===== Cards ===== */
 .card-cell {
   width: 60px; height: 60px; line-height: 60px;
   font-size: 1.25rem; font-weight: 800;
   border-radius: 10px;
-  background: rgba(255,255,255,0.92);
+  background: #fff;
   color: var(--ink);
-  text-align: center;
-  border: 1px solid rgba(255,255,255,0.7);
-  box-shadow: 0 2px 8px rgba(0,0,0,0.12);
-  transition: background .15s ease, color .15s ease, transform .08s ease;
+  border: 1px solid rgba(0,0,0,0.1);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  transition: background .15s ease, transform .1s ease;
 }
-.card-cell.marked {
-  background: linear-gradient(180deg, var(--green-light), var(--green));
-  color: #fff;
-}
-.card-cell.winner {
-  border: 3px solid var(--gold);
-  box-shadow: 0 0 10px rgba(255,209,102,0.8);
-  transform: translateY(-1px);
-}
+.card-cell.marked { background: linear-gradient(180deg, var(--green-light), var(--green)); color: #fff; }
+.card-cell.winner { border: 3px solid var(--gold); box-shadow: 0 0 10px rgba(255,215,0,0.8); transform: translateY(-1px); }
 
-/* ===== All cards (mini grid) ===== */
-#all-cards-view {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-  gap: 12px;
-  justify-items: center;
-  margin-top: 16px;
-  padding: 10px;
-  max-width: 100%;
-}
-
-#all-cards-view .card-wrapper {
-  background: rgba(255,255,255,0.12);
-  border: 1px solid rgba(255,255,255,0.28);
-  border-radius: 10px;
-  padding: 6px; width: 120px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.22);
-  color: #fff;
-}
-
-#all-cards-view .card-title {
-  font-size: .95rem; font-weight: 700; margin-bottom: 4px;
-  color: var(--gold);
-  text-shadow: 0 0 6px rgba(255,209,102,0.5);
-  font-family: 'Mountains of Christmas', cursive;
-}
-
-#all-cards-view .card-grid {
-  display: grid;
-  grid-template-columns: repeat(5, 20px);
-  gap: 4px;
-}
-
-#all-cards-view .card-cell {
-  width: 20px; height: 20px; line-height: 20px;
-  font-size: .75rem; font-weight: 800;
-  border-radius: 4px;
-  background: rgba(255,255,255,0.9);
-  color: var(--ink);
-  text-align: center;
-}
-
-#all-cards-view .card-cell.marked {
-  background: #48c774;
-  color: white;
-}
-
-.card-wrapper.winner {
-  border-color: var(--gold);
-  box-shadow: 0 0 10px rgba(255,209,102,0.8);
-  background: rgba(255,255,255,0.18);
-}
-
+/* ===== Winner badge ===== */
 .winner-badge {
-  color: #2b1a00;
   background: var(--gold);
-  font-weight: 800;
+  color: #2b1a00;
+  font-weight: 700;
   padding: 4px 8px;
   border-radius: 4px;
   margin-top: 6px;
 }
 
 /* ===== Announcer ===== */
-.announcer-display {
-  display: flex; align-items: center; justify-content: center;
-  margin-top: 22px; gap: 14px;
-}
-
 .announce-letter {
-  font-size: 4.6rem; font-weight: 700; line-height: 1;
+  font-size: 4.6rem;
+  font-weight: 700;
   color: var(--gold);
-  text-shadow: 0 0 10px rgba(255,209,102,0.75);
-  animation: twinkle 2.6s ease-in-out infinite;
+  animation: twinkle 2.5s ease-in-out infinite;
 }
 
 .announce-ball {
   width: 100px; height: 100px; line-height: 100px;
   border-radius: 50%;
-  font-size: 2.2rem; font-weight: 700; text-align: center;
-  background: rgba(255,255,255,0.12);
+  font-size: 2.2rem; font-weight: 700;
+  text-align: center;
+  background: var(--green);
   color: #fff;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.25), inset 0 0 10px rgba(255,255,255,0.08);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.25);
 }
 
-/* keep your color classes reused here, too */
-.announce-letter.B, .announce-ball.B { background: #1f6bff; color: #fff; }
-.announce-letter.I, .announce-ball.I { background: #ffd54f; color: #3b2b00; }
-.announce-letter.N, .announce-ball.N { background: #ff9800; color: #fff; }
-.announce-letter.G, .announce-ball.G { background: #48c774; color: #fff; }
-.announce-letter.O, .announce-ball.O { background: #9c27b0; color: #fff; }
-
-/* ===== Utilities ===== */
-.hidden { display: none !important; }
-
-/* High-contrast inputs/selects if any appear on this page */
+/* ===== Inputs (optional) ===== */
 input[type="number"], input[type="text"], select {
-  background: #fff; color: #000; border: 2px solid var(--gold);
-  border-radius: 8px; padding: 8px 10px; outline: none;
+  background: #fff;
+  color: #000;
+  border: 2px solid var(--gold);
+  border-radius: 8px;
+  padding: 8px 10px;
+  outline: none;
 }
