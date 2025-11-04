@@ -164,8 +164,6 @@ function renderAllCards(container, calledNumbers) {
   cards.forEach(({ element }) => container.appendChild(element));
 }
 
-
-
 function resetGame() {
   const newState = {
     calledNumbers: [],
@@ -299,7 +297,6 @@ function updateDisplays() {
   }
 }
 
-
 function hasBingo(card, called) {
   const marked = card.map(row => row.map(num => num === 0 || called.includes(num)));
 
@@ -319,7 +316,6 @@ function hasBingo(card, called) {
 
   return false;
 } 
-
 
 window.addEventListener("storage", updateDisplays);
 window.addEventListener("DOMContentLoaded", updateDisplays);
