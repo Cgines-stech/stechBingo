@@ -116,7 +116,17 @@ body {
   }
 
   .print-cell.free {
-    background: #24a0d6;
-    color: #24a0d6;
-  }
+  background: repeating-linear-gradient(
+    45deg,
+    #304e35,
+    #304e35 10px,
+    #c13025 10px,
+    #c13025 20px
+  );
+  color: #fff;
+  border: 2px solid #c13025;
+  box-shadow: 0 0 10px rgba(193, 48, 37, 0.4);
+  text-shadow: 1px 1px 2px #304e35;
+}
+
 }
