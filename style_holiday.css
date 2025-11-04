@@ -1,0 +1,298 @@
+/* style_holiday.css */
+
+/* Playful Christmas font (close alternative to "Christmas Mountain") */
+@import url('https://fonts.googleapis.com/css2?family=Mountains+of+Christmas:wght@400;700&display=swap');
+
+:root{
+  --pine: #0f2f25;
+  --pine-dark: #0a231b;
+  --snow: #ffffff;
+  --gold: #ffd166;
+  --gold-deep: #e6b84f;
+  --red: #d64545;
+  --berry: #e53935;
+  --mint: #3cc28a;
+  --sky: #87d2ff;
+  --violet: #a86ce8;
+}
+
+/* Page background: cozy gradient + subtle “snow dust” dots (no big images) */
+body {
+  font-family: 'Mountains of Christmas', cursive, 'Courier New', monospace;
+  text-align: center;
+  padding: 20px;
+  background:
+    radial-gradient(1200px 800px at 10% -10%, rgba(255,255,255,0.06), transparent 60%),
+    radial-gradient(1000px 700px at 110% -20%, rgba(255,255,255,0.05), transparent 60%),
+    linear-gradient(160deg, var(--pine) 0%, var(--pine-dark) 60%);
+  color: var(--snow);
+  min-height: 100vh;
+  overflow-x: hidden;
+  position: relative;
+}
+
+/* ========= Garland of Lights (CSS-only, lightweight) ========= */
+body::before {
+  content: "";
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
+  top: 0;
+  width: min(1000px, 92vw);
+  height: 18px;
+  z-index: 1;
+  /* bulbs along a wire; each radial-gradient is a bulb */
+  background:
+    /* wire */
+    linear-gradient(#2b3e36, #2b3e36) center/100% 3px no-repeat,
+    /* repeating bulbs line */
+    radial-gradient(circle 6px, #ff5757 60%, transparent 61%) left 5% center/60px 100% repeat-x,
+    radial-gradient(circle 6px, #57ff9f 60%, transparent 61%) left 20% center/60px 100% repeat-x,
+    radial-gradient(circle 6px, #7ecbff 60%, transparent 61%) left 35% center/60px 100% repeat-x,
+    radial-gradient(circle 6px, #ffd166 60%, transparent 61%) left 50% center/60px 100% repeat-x,
+    radial-gradient(circle 6px, #ff85e6 60%, transparent 61%) left 65% center/60px 100% repeat-x,
+    radial-gradient(circle 6px, #a0ff66 60%, transparent 61%) left 80% center/60px 100% repeat-x;
+  background-blend-mode: normal;
+  animation: bulbsGlow 2.8s ease-in-out infinite;
+  opacity: 0.95;
+}
+
+@keyframes bulbsGlow {
+  0%, 100% { filter: drop-shadow(0 0 4px #fff) drop-shadow(0 0 10px var(--gold)); }
+  50%      { filter: drop-shadow(0 0 6px #fff) drop-shadow(0 0 16px #ff6aa2); }
+}
+
+/* Reduced motion: keep the look, nix the glow animation */
+@media (prefers-reduced-motion: reduce) {
+  body::before { animation: none; }
+}
+
+/* ========= Global Layout Overrides ========= */
+.view {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 900px;
+  margin: 20px auto;
+}
+
+/* ========= Last-called big ball ========= */
+#last-called {
+  width: 110px;
+  height: 110px;
+  line-height: 110px;
+  border-radius: 50%;
+  margin: 26px auto 10px;
+  font-size: 2.6rem;
+  font-weight: 700;
+  text-align: center;
+  background: #1e2c27;
+  color: var(--snow);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.35), inset 0 0 12px rgba(255,255,255,0.08);
+  transition: transform .15s ease, background .2s ease, color .2s ease;
+}
+#last-called.last-ball { transform: scale(1.03); }
+
+/* Color-code like ornaments (B I N G O) */
+.called.B, #last-called.last-ball.B { background: #1f6bff; color: #fff; }
+.called.I, #last-called.last-ball.I { background: #ffd54f; color: #3b2b00; }
+.called.N, #last-called.last-ball.N { background: #ff9800; color: #fff; }
+.called.G, #last-called.last-ball.G { background: #48c774; color: #fff; }
+.called.O, #last-called.last-ball.O { background: #9c27b0; color: #fff; }
+
+/* ========= Number Grid (BINGO rows) ========= */
+.grid-row {
+  display: flex;
+  justify-content: center;
+  margin: 6px 0;
+}
+.row-label {
+  width: 60px;
+  font-weight: 700;
+  margin-right: 10px;
+  font-size: 2rem;
+  line-height: 60px;
+  color: var(--gold);
+  text-shadow: 0 0 6px rgba(255,209,102,0.6);
+}
+
+.number {
+  width: 60px;
+  height: 60px;
+  line-height: 60px;
+  margin: 2px;
+  border-radius: 50%;
+  background: #e8f2ee;
+  color: #0e2a22;
+  font-size: 1.4rem;
+  font-weight: 700;
+  text-align: center;
+  transition: transform .12s ease, box-shadow .15s ease, background .2s ease, color .2s ease;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+}
+.number:hover { transform: translateY(-1px); }
+
+/* Called numbers pop a bit */
+.called {
+  animation: cozyPop .18s ease;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.25);
+  color: #fff;
+}
+@keyframes cozyPop {
+  0% { transform: scale(0.88); opacity: 0.7; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+/* ========= Single Card View ========= */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 60px);
+  grid-gap: 8px;
+  margin-top: 18px;
+}
+
+.card-cell {
+  width: 60px;
+  height: 60px;
+  line-height: 60px;
+  font-size: 1.3rem;
+  border-radius: 10px;
+  background: #f3faf7;
+  color: #0d2a22;
+  font-weight: 700;
+  text-align: center;
+  border: 1px solid rgba(255,255,255,0.6);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+  transition: background .15s ease, color .15s ease, transform .12s ease;
+}
+.card-cell.marked {
+  background: linear-gradient(180deg, #58d1a1, #1d7a55);
+  color: #fff;
+}
+.card-cell.winner {
+  border: 3px solid var(--gold);
+  box-shadow: 0 0 10px rgba(255,209,102,0.9);
+  transform: translateY(-1px);
+}
+
+/* ========= All Cards (mini cards wall) ========= */
+#all-cards-view {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 12px;
+  justify-items: center;
+  margin-top: 18px;
+  padding: 10px;
+  max-width: 100%;
+}
+
+#all-cards-view .card-wrapper {
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.18);
+  border-radius: 10px;
+  padding: 6px;
+  width: 120px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  color: var(--snow);
+}
+
+#all-cards-view .card-title {
+  font-size: 0.9rem;
+  font-weight: 700;
+  margin-bottom: 4px;
+  color: var(--gold);
+  text-shadow: 0 0 6px rgba(255,209,102,0.5);
+}
+
+#all-cards-view .card-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 20px);
+  gap: 4px;
+}
+
+#all-cards-view .card-cell {
+  width: 20px;
+  height: 20px;
+  line-height: 20px;
+  font-size: 0.75rem;
+  border-radius: 4px;
+  background: #e7f4ef;
+  color: #10332a;
+  text-align: center;
+  font-weight: 700;
+}
+
+#all-cards-view .card-cell.marked {
+  background: #48c774; /* festive green */
+  color: white;
+}
+
+.card-wrapper.winner {
+  border-color: var(--gold);
+  box-shadow: 0 0 12px rgba(255,209,102,0.8);
+  background: rgba(255,255,255,0.12);
+}
+
+.winner-badge {
+  color: #2b1a00;
+  background: var(--gold);
+  font-weight: 800;
+  padding: 4px 8px;
+  border-radius: 4px;
+  margin-top: 6px;
+}
+
+/* ========= Announcer (B I N G O ball + letter) ========= */
+.announcer-display {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 26px;
+  gap: 16px;
+  font-family: 'Mountains of Christmas', cursive, sans-serif;
+}
+
+.announce-letter {
+  font-size: 5rem;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--gold);
+  text-shadow: 0 0 10px rgba(255,209,102,0.75);
+}
+
+.announce-ball {
+  width: 100px;
+  height: 100px;
+  line-height: 100px;
+  border-radius: 50%;
+  font-size: 2.3rem;
+  font-weight: 700;
+  text-align: center;
+  background: #1e2c27;
+  color: var(--snow);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.35), inset 0 0 12px rgba(255,255,255,0.08);
+}
+
+/* Reuse color classes for consistency with main grid */
+.announce-letter.B, .announce-ball.B { background: #1f6bff; color: #fff; }
+.announce-letter.I, .announce-ball.I { background: #ffd54f; color: #3b2b00; }
+.announce-letter.N, .announce-ball.N { background: #ff9800; color: #fff; }
+.announce-letter.G, .announce-ball.G { background: #48c774; color: #fff; }
+.announce-letter.O, .announce-ball.O { background: #9c27b0; color: #fff; }
+
+/* ========= Misc ========= */
+.hidden { display: none !important; }
+#control-count { font-weight: bold; color: var(--gold); }
+
+/* Optional: Pattern banner styling if you added it */
+#pattern-banner {
+  color: var(--gold);
+  gap: 8px;
+}
+#pattern-banner label { font-weight: 700; }
+#pattern-display {
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.12);
+  border: 1px solid rgba(255,255,255,0.2);
+}
