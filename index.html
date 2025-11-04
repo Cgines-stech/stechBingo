@@ -2,30 +2,27 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Bingo Board</title>
-  <link rel="stylesheet" href="style.css">
-  <link rel="stylesheet" href="style_holiday.css">
+  <link rel="stylesheet" href="style_holiday.css" />
   <script src="cardData_with_free.js"></script>
   <script src="script.js" defer></script>
 </head>
 <body>
-  <div id="view-toggle" class="hidden"></div>
+  <div id="pattern-banner" class="view">
+    <label for="pattern-display"><strong>Pattern:</strong></label>
+    <span id="pattern-display"></span>
+  </div>
 
-<div id="pattern-banner" class="view">
-  <label for="pattern-display"><strong>Pattern:</strong></label>
-  <span id="pattern-display"></span>
-</div>
-
+  <!-- ONE last-called circle -->
   <div id="last-called"></div>
 
-<!-- Preview + Board -->
-<div id="board-layout">
-  <div id="number-grid" class="view"></div>
-  <aside id="pattern-preview" aria-label="Pattern preview"></aside>
-</div>
+  <!-- Board (the preview window will be injected and is draggable) -->
+  <div id="board-layout">
+    <div id="number-grid" class="view"></div>
+  </div>
 
-<div id="card-view" class="view hidden"></div>
-<div id="all-cards-view" class="view hidden"></div>
+  <div id="card-view" class="view hidden"></div>
+  <div id="all-cards-view" class="view hidden"></div>
 </body>
 </html>
