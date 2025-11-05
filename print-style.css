@@ -119,10 +119,10 @@
     position: relative;
     background: repeating-linear-gradient(
       45deg,
-      #304e35,
-      #304e35 10px,
-      #c13025 10px,
-      #c13025 20px
+      #53a07d,
+      #53a07d 10px,
+      #f56970 10px,
+      #f56970 20px
     );
     color: #fff;
     /* border: 2px solid #c13025; */
@@ -137,7 +137,7 @@
     position: absolute;
     top: 0;
     left: 50%;
-    width: 20%;
+    width: 15%;
     height: 100%;
     background: gold;
     transform: translateX(-50%);
@@ -151,7 +151,7 @@
     left: 0;
     top: 50%;
     width: 100%;
-    height: 20%;
+    height: 15%;
     background: gold;
     transform: translateY(-50%);
     box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
