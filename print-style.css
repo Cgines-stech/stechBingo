@@ -115,71 +115,55 @@
     z-index: 1;
   }
 
+/* FREE cell as a clean canvas for the bauble */
 .print-cell.free {
   position: relative;
-  color: #fff;
-  box-shadow: 0 0 10px rgba(193, 48, 37, 0.4);
-  text-shadow: 1px 1px 2px #304e35;
   overflow: hidden;
-
-  /* Stripes (bottom layer) + vertical & horizontal ribbons (on top) */
-  background:
-    /* vertical ribbon centered (15% wide) */
-    linear-gradient(to right,
-      transparent 42.5%,
-      gold 42.5%, gold 57.5%,
-      transparent 57.5%) center/100% 100% no-repeat,
-    /* horizontal ribbon centered (15% tall) */
-    linear-gradient(to bottom,
-      transparent 42.5%,
-      gold 42.5%, gold 57.5%,
-      transparent 57.5%) center/100% 100% no-repeat,
-    /* gift wrap stripes */
-    repeating-linear-gradient(
-      45deg,
-      #53a07d,
-      #53a07d 10px,
-      #f56970 10px,
-      #f56970 20px
-    );
+  /* remove the present look: no stripes, no ribbons */
+  background: #ffffff; /* or 'transparent' if you prefer */
+  box-shadow: none;
+  text-shadow: none;
 }
 
-/* Ornament: glossy bauble with cap + loop */
+/* The bauble body */
 .print-cell.free::before {
-  /* The bauble */
   content: "";
   position: absolute;
-  top: 24%;
   left: 50%;
-  width: 0.6in;
-  height: 0.6in;
+  top: 50%;
+  width: 0.55in;              /* fits nicely inside a 0.75in cell */
+  height: 0.55in;
   transform: translate(-50%, -50%);
   border-radius: 50%;
+  /* glossy gold look */
   background:
-    radial-gradient(circle at 30% 30%, #ffffffcc 10%, transparent 12%) ,
-    radial-gradient(circle at 65% 65%, #00000022 8%, transparent 10%),
-    radial-gradient(circle at 50% 55%, #ffd272 0%, #ffbf2d 40%, #d39e1d 100%);
-  box-shadow: 0 2px 4px rgba(0,0,0,0.25);
-  z-index: 2;
+    radial-gradient(circle at 32% 30%, #ffffffcc 10%, transparent 12%),
+    radial-gradient(circle at 64% 70%, #00000022 8%, transparent 10%),
+    radial-gradient(circle at 50% 58%, #ffd86a 0%, #ffc233 45%, #d19a1a 100%);
+  box-shadow: 0 1px 2px rgba(0,0,0,0.25);
+  z-index: 1;
 }
 
+/* Cap + loop above the bauble */
 .print-cell.free::after {
-  /* Cap + loop (two shapes via multiple backgrounds) */
   content: "";
   position: absolute;
-  top: 24%;
   left: 50%;
-  width: 0.6in;
+  /* place the cap right at the top of the bauble:
+     50% (center) - radius (0.275in) */
+  top: calc(50% - 0.275in);
+  width: 0.55in;
   height: 0.35in;
-  transform: translate(-50%, calc(-50% - 0.36in));
+  transform: translateX(-50%);
   background:
     /* loop ring */
-    radial-gradient(circle closest-side, transparent 72%, #c9a84a 73% 84%, transparent 85%) center 0.05in / 0.2in 0.2in no-repeat,
+    radial-gradient(circle closest-side,
+      transparent 72%, #c9a84a 73% 84%, transparent 85%)
+      center -0.02in / 0.20in 0.20in no-repeat,
     /* cap */
-    linear-gradient(#c9a84a, #a9862e) center 0.18in / 0.28in 0.16in no-repeat;
+    linear-gradient(#c9a84a, #a9862e)
+      center 0.10in / 0.28in 0.16in no-repeat;
   z-index: 2;
 }
-
-
 
 }
