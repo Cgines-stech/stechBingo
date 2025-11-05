@@ -2,445 +2,140 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Mountains+of+Christmas:wght@400;700&display=swap');
 
+/* =========================
+   FREE cell as 3 presents
+   ========================= */
 :root {
-  /* gentle snow tones */
-  --background-top: #f9fbff;
-  --background-mid: #eaf4fa;
-  --background-bottom: #f4f8f6;
-
-  --gold: #d4af37;
-  --green: #2e7d6b;
-  --green-light: #45c99a;
-  --ink: #0c3027;
-  --white: #ffffff;
+  --gift-red: #e84b4b;
+  --gift-green-2: #2e7d6b;     /* reuses your green tone */
+  --gift-plum: #8b4db6;
+  --ribbon-gold: #d4af37;      /* your --gold */
+  --ribbon-cream: #fff6d6;
 }
 
-/* ===== Page background (no image) ===== */
-body {
-  font-family: 'Segoe UI', system-ui, -apple-system, Roboto, 'Helvetica Neue', Arial, sans-serif;
-  text-align: center;
-  padding: 20px;
-  color: var(--ink);
+/* Make the FREE cell a tiny gift shelf */
+.card-cell.free {
+  position: relative;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+  isolation: isolate; /* keep pseudo-elements contained */
+}
 
+/* Draw 3 presents using layered background gradients */
+.card-cell.free {
+  /* Sizes for each present (width x height) */
+  --pw: 17px;    /* present width */
+  --ph: 22px;    /* present height */
+  --gap: 5px;    /* gap between presents */
+  --y: 19px;     /* vertical anchor (from top) */
+
+  /* Helper placements */
+  --x1: calc(50% - var(--pw) - calc(var(--gap) / 2));
+  --x2: calc(50% - var(--pw) / 2);
+  --x3: calc(50% + var(--gap) / 2);
+
+  /* Each present is: box color layer, vertical ribbon, horizontal ribbon, and a knot (radial) */
   background:
-    linear-gradient(180deg, var(--background-top), var(--background-mid) 50%, var(--background-bottom));
-  background-attachment: fixed;
-  min-height: 100vh;
-  position: relative;   /* create stacking context for the snow layer */
-  overflow-x: hidden;
-}
+    /* --- Present 1: RED --- */
+    /* knot */
+    radial-gradient(8px 6px at calc(var(--x1) + 50%) calc(var(--y) - 3px),
+      var(--ribbon-gold) 50%, transparent 52%) ,
+    /* horizontal ribbon */
+    linear-gradient(transparent calc(var(--y) + calc(var(--ph) / 2) - 2px),
+      var(--ribbon-cream) 0 4px, transparent 0),
+    /* vertical ribbon */
+    linear-gradient(to right,
+      transparent calc(50% - 2px), var(--ribbon-gold) 0 4px, transparent 0),
+    /* box */
+    linear-gradient(180deg, #f36a6a, var(--gift-red)),
 
-/* ===== Festive falling snowflakes (red, green, gold, white) ===== */
-/* ===== Festive multi-layer snowflakes (varied sizes + holiday colors) ===== */
-body::before,
-body::after,
-body::backdrop {
-  content: "";
-  position: fixed;
-  inset: -20% -20%;
-  pointer-events: none;
-  z-index: 0;
-  animation: snowfall 35s linear infinite;
-  opacity: 0.65;
-  background-repeat: repeat;
-}
+    /* --- Present 2: GREEN --- */
+    radial-gradient(8px 6px at calc(var(--x2) + 50%) calc(var(--y) - 3px),
+      var(--ribbon-gold) 50%, transparent 52%) ,
+    linear-gradient(transparent calc(var(--y) + calc(var(--ph) / 2) - 2px),
+      var(--ribbon-cream) 0 4px, transparent 0),
+    linear-gradient(to right,
+      transparent calc(50% - 2px), var(--ribbon-gold) 0 4px, transparent 0),
+    linear-gradient(180deg, #4fc7a3, var(--gift-green-2)),
 
-/* Back layer: larger, slower flakes */
-body::before {
-  background-image:
-    radial-gradient(4px 4px at 10% 20%, rgba(255,255,255,0.9) 70%, transparent 71%),
-    radial-gradient(5px 5px at 50% 10%, rgba(255,215,0,0.9) 70%, transparent 71%), /* gold */
-    radial-gradient(4.5px 4.5px at 70% 60%, rgba(255,59,59,0.9) 70%, transparent 71%), /* red */
-    radial-gradient(5px 5px at 85% 35%, rgba(79,220,113,0.9) 70%, transparent 71%); /* green */
-  background-size: 400px 400px;
-  animation-duration: 45s;
-  animation-delay: 0s;
-}
+    /* --- Present 3: PLUM --- */
+    radial-gradient(8px 6px at calc(var(--x3) + 50%) calc(var(--y) - 3px),
+      var(--ribbon-gold) 50%, transparent 52%) ,
+    linear-gradient(transparent calc(var(--y) + calc(var(--ph) / 2) - 2px),
+      var(--ribbon-cream) 0 4px, transparent 0),
+    linear-gradient(to right,
+      transparent calc(50% - 2px), var(--ribbon-gold) 0 4px, transparent 0),
+    linear-gradient(180deg, #a676de, var(--gift-plum));
+  background-repeat: no-repeat;
 
-/* Middle layer: medium flakes, moderate speed */
-body::after {
-  background-image:
-    radial-gradient(3.5px 3.5px at 15% 70%, rgba(255,255,255,0.9) 70%, transparent 71%),
-    radial-gradient(3px 3px at 40% 40%, rgba(255,215,0,0.9) 70%, transparent 71%), /* gold */
-    radial-gradient(2.8px 2.8px at 65% 85%, rgba(255,59,59,0.9) 70%, transparent 71%), /* red */
-    radial-gradient(3.2px 3.2px at 80% 25%, rgba(79,220,113,0.9) 70%, transparent 71%); /* green */
-  background-size: 280px 280px;
-  animation-duration: 30s;
-  animation-delay: -5s;
-}
+  /* Sizes correspond to layers above, back-to-front groups */
+  background-size:
+    /* P1 knot */           10px 8px,
+    /* P1 hribbon */        var(--pw) 4px,
+    /* P1 vribbon */        4px var(--ph),
+    /* P1 box */            var(--pw) var(--ph),
 
-/* Front layer: smaller, faster flakes */
-body::backdrop {
-  background-image:
-    radial-gradient(2.5px 2.5px at 25% 50%, rgba(255,255,255,0.9) 70%, transparent 71%),
-    radial-gradient(2.2px 2.2px at 55% 15%, rgba(255,215,0,0.85) 70%, transparent 71%), /* gold */
-    radial-gradient(2px 2px at 75% 75%, rgba(255,59,59,0.8) 70%, transparent 71%), /* red */
-    radial-gradient(2px 2px at 90% 40%, rgba(79,220,113,0.8) 70%, transparent 71%); /* green */
-  background-size: 200px 200px;
-  animation-duration: 20s;
-  animation-delay: -10s;
-}
+    /* P2 knot */           10px 8px,
+    /* P2 hribbon */        var(--pw) 4px,
+    /* P2 vribbon */        4px var(--ph),
+    /* P2 box */            var(--pw) var(--ph),
 
-@keyframes snowfall {
-  0% {
-    transform: translateY(-100px) translateX(0);
-  }
-  100% {
-    transform: translateY(400px) translateX(-150px);
-  }
-}
+    /* P3 knot */           10px 8px,
+    /* P3 hribbon */        var(--pw) 4px,
+    /* P3 vribbon */        4px var(--ph),
+    /* P3 box */            var(--pw) var(--ph);
 
-/* ===== Twinkle animation for random flakes ===== */
-@keyframes sparkle {
-  0%, 100% {
-    filter: drop-shadow(0 0 0px rgba(255,255,255,0));
-    opacity: 1;
-  }
-  50% {
-    filter: drop-shadow(0 0 6px rgba(255,255,255,0.9));
-    opacity: 0.9;
-  }
-}
+  background-position:
+    /* P1 */ calc(var(--x1) + calc(var(--pw) / 2)) calc(var(--y) - 3px),
+            var(--x1) calc(var(--y) + calc(var(--ph) / 2) - 2px),
+            calc(var(--x1) + calc(var(--pw) / 2) - 2px) var(--y),
+            var(--x1) var(--y),
 
-/* apply sparkle to a subset of snow layers */
-body::before {
-  animation: snowfall 45s linear infinite, sparkle 5s ease-in-out infinite;
-}
-body::after {
-  animation: snowfall 30s linear infinite, sparkle 6s ease-in-out infinite;
-}
-body::backdrop {
-  animation: snowfall 20s linear infinite, sparkle 4.5s ease-in-out infinite;
-}
+    /* P2 */ calc(var(--x2) + calc(var(--pw) / 2)) calc(var(--y) - 3px),
+            var(--x2) calc(var(--y) + calc(var(--ph) / 2) - 2px),
+            calc(var(--x2) + calc(var(--pw) / 2) - 2px) var(--y),
+            var(--x2) var(--y),
 
+    /* P3 */ calc(var(--x3) + calc(var(--pw) / 2)) calc(var(--y) - 3px),
+            var(--x3) calc(var(--y) + calc(var(--ph) / 2) - 2px),
+            calc(var(--x3) + calc(var(--pw) / 2) - 2px) var(--y),
+            var(--x3) var(--y);
 
-/* Respect reduced motion, but keep the look */
-@media (prefers-reduced-motion: reduce) {
-  body::before { animation: none; opacity: 0.45; }
-}
-
-/* Festive headings */
-h1, h2, h3, .glow-title, #pattern-banner label, .announce-letter {
-  font-family: 'Mountains of Christmas', cursive;
-  letter-spacing: .5px;
-  color: var(--green);
-  text-shadow: 0 0 5px rgba(0,0,0,0.1);
-}
-
-/* Soft twinkle animation for subtle movement */
-@keyframes twinkle {
-  0%, 100% { opacity: 1; filter: brightness(1); }
-  50% { opacity: 0.85; filter: brightness(1.15); }
-}
-
-/* Subtle entry pop for called numbers */
-@keyframes popIn {
-  0% { transform: scale(0.9); opacity: 0.7; }
-  100% { transform: scale(1); opacity: 1; }
-}
-
-/* ===== “Last called” ball ===== */
-#last-called {
-  width: 110px;
-  height: 110px;
-  line-height: 110px;
-  border-radius: 50%;
-  margin: 26px auto 12px;
-  font-size: 2.6rem;
-  font-weight: 700;
-  background: var(--green-light);
-  color: #fff;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.25);
-  animation: twinkle 2.5s ease-in-out infinite;
-}
-
-/* BINGO color palette */
-.called.B, #last-called.last-ball.B { background: #3c91ff; color: #fff; }
-.called.I, #last-called.last-ball.I { background: #ffd54f; color: #3b2b00; }
-.called.N, #last-called.last-ball.N { background: #ff9800; color: #fff; }
-.called.G, #last-called.last-ball.G { background: #48c774; color: #fff; }
-.called.O, #last-called.last-ball.O { background: #9c27b0; color: #fff; }
-
-/* ===== Number grid ===== */
-.view {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  max-width: 920px;
-  margin: 16px auto;
-}
-
-.row-label {
-  width: 60px;
-  font-weight: 700;
-  margin-right: 10px;
-  font-size: 2rem;
-  line-height: 60px;
-  color: var(--gold);
-  font-family: 'Mountains of Christmas', cursive;
-}
-
-.number {
-  width: 60px; height: 60px; line-height: 60px;
-  margin: 2px; border-radius: 50%;
-  background: #ffffff;
-  color: var(--ink);
-  font-size: 1.35rem; font-weight: 800;
-  text-align: center;
-  transition: transform .08s ease, background .15s ease;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
-}
-.number:hover { transform: translateY(-1px); }
-.called { animation: popIn .16s ease; box-shadow: 0 3px 8px rgba(0,0,0,0.15); color: #fff; }
-
-/* ===== Cards ===== */
-.card-cell {
-  width: 60px; height: 60px; line-height: 60px;
-  font-size: 1.25rem; font-weight: 800;
+  /* lift the visuals a touch */
+  box-shadow: inset 0 -6px 18px rgba(0,0,0,0.06), 0 2px 6px rgba(0,0,0,0.08);
   border-radius: 10px;
-  background: #fff;
-  color: var(--ink);
-  border: 1px solid rgba(0,0,0,0.1);
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-  transition: background .15s ease, transform .1s ease;
-}
-.card-cell.marked { background: linear-gradient(180deg, var(--green-light), var(--green)); color: #fff; }
-.card-cell.winner { border: 3px solid var(--gold); box-shadow: 0 0 10px rgba(255,215,0,0.8); transform: translateY(-1px); }
-
-/* ===== Winner badge ===== */
-.winner-badge {
-  background: var(--gold);
-  color: #2b1a00;
-  font-weight: 700;
-  padding: 4px 8px;
-  border-radius: 4px;
-  margin-top: 6px;
 }
 
-/* ===== Announcer ===== */
-.announce-letter {
-  font-size: 4.6rem;
-  font-weight: 700;
-  color: var(--gold);
-  animation: twinkle 2.5s ease-in-out infinite;
-}
-
-.announce-ball {
-  width: 100px; height: 100px; line-height: 100px;
+/* Optional shadow “shelf” and subtle bounce on hover/focus */
+.card-cell.free::after {
+  content: "";
+  position: absolute;
+  inset: auto 10px 8px 10px;
+  height: 8px;
   border-radius: 50%;
-  font-size: 2.2rem; font-weight: 700;
-  text-align: center;
-  background: var(--green);
-  color: #fff;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+  background: radial-gradient(closest-side, rgba(0,0,0,0.18), rgba(0,0,0,0));
+  z-index: -1;
+  opacity: .35;
 }
 
-/* ===== Inputs (optional) ===== */
-input[type="number"], input[type="text"], select {
-  background: #fff;
-  color: #000;
-  border: 2px solid var(--gold);
-  border-radius: 8px;
-  padding: 8px 10px;
-  outline: none;
-}
-/* ===== Pattern Preview (mini 5×5) ===== */
-#board-layout {
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  gap: 18px;
-  max-width: 1100px;
-  margin: 0 auto 8px;
+.card-cell.free:hover { transform: translateY(-1px); }
+.card-cell.free.winner {
+  /* keep your winner ring */
+  border: 3px solid var(--gold);
+  box-shadow: 0 0 10px rgba(255,215,0,0.8);
 }
 
-#pattern-preview {
-  width: 200px;
-  padding: 12px 10px;
-  border-radius: 12px;
-  background: rgba(255,255,255,0.65);
-  border: 1px solid rgba(0,0,0,0.07);
-  box-shadow: 0 6px 20px rgba(0,0,0,0.08);
-  color: #12352b;
+/* Keep the FREE label readable if you render text inside */
+.card-cell.free,
+.card-cell.free span,
+.card-cell.free .free-label {
+  color: var(--ink);
+  text-shadow: 0 1px 0 rgba(255,255,255,0.6);
+  font-weight: 800;
 }
 
-#pattern-preview .preview-title {
-  font-family: 'Mountains of Christmas', cursive;
-  font-weight: 700;
-  font-size: 1.15rem;
-  margin-bottom: 6px;
-  color: var(--green);
-  text-align: center;
-}
-
-#pattern-preview .preview-note {
-  font-size: 0.85rem;
-  text-align: center;
-  color: #5a6d66;
-  margin-bottom: 8px;
-}
-
-#pattern-preview .mini-card {
-  display: grid;
-  grid-template-columns: repeat(5, 28px);
-  grid-auto-rows: 28px;
-  gap: 6px;
-  justify-content: center;
-  margin: 6px auto 2px;
-}
-
-#pattern-preview .mini-cell {
-  border-radius: 6px;
-  background: #ffffff;
-  border: 1px solid rgba(0,0,0,0.08);
-  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
-}
-
-#pattern-preview .mini-cell.free {
-  background: #f0faf6;
-  border-style: dashed;
-  border-color: rgba(0,0,0,0.15);
-}
-
-/* highlighted cells for the current shape */
-#pattern-preview .mini-cell.on {
-  background: linear-gradient(180deg, var(--green-light), var(--green));
-  border-color: rgba(0,0,0,0.12);
-  box-shadow: 0 0 10px rgba(212,175,55,0.55);
-  animation: previewPulse 1.1s ease-in-out infinite alternate;
-}
-
-@keyframes previewPulse {
-  from { transform: scale(1);   filter: brightness(1);   }
-  to   { transform: scale(1.05); filter: brightness(1.08);}
-}
-
-/* stack preview above board on small screens */
-@media (max-width: 840px) {
-  #board-layout { flex-direction: column; align-items: center; }
-  #pattern-preview { width: 240px; }
-}
-
-/* ===== Floating, draggable Pattern Preview window ===== */
-#pattern-flyout {
-  position: fixed;
-  top: 90px; left: 24px; /* default spawn */
-  width: 260px;
-  background: rgba(255,255,255,0.92);
-  border: 1px solid rgba(0,0,0,0.08);
-  box-shadow: 0 18px 40px rgba(0,0,0,0.18);
-  border-radius: 12px;
-  z-index: 9999;
-  backdrop-filter: blur(3px);
-}
-
-#pattern-flyout .pf-head {
-  display: flex; justify-content: space-between; align-items: center;
-  padding: 8px 10px;
-  border-bottom: 1px solid rgba(0,0,0,0.06);
-  background: linear-gradient(180deg, #f7faf8, #eef6f2);
-  border-radius: 12px 12px 0 0;
-  cursor: default;
-}
-
-#pattern-flyout .pf-drag-handle {
-  font-family: 'Mountains of Christmas', cursive;
-  font-weight: 700; color: var(--green);
-  user-select: none; cursor: move;
-}
-
-#pattern-flyout .pf-actions { display: flex; gap: 6px; }
-#pattern-flyout .pf-btn {
-  border: none; background: #fff; color: #1b3a32; cursor: pointer;
-  width: 26px; height: 26px; border-radius: 6px;
-  box-shadow: 0 1px 2px rgba(0,0,0,0.08);
-}
-#pattern-flyout .pf-btn:hover { background: #f1f5f4; }
-
-#pattern-flyout .pf-body { padding: 10px; }
-#pattern-preview .pf-title,
-#pattern-preview .preview-title { /* support old/new field names */
-  font-family: 'Mountains of Christmas', cursive;
-  font-weight: 700; color: var(--green); text-align: center; margin-bottom: 6px;
-}
-#pattern-preview .pf-note,
-#pattern-preview .preview-note {
-  font-size: .85rem; color: #5a6d66; text-align: center; margin-bottom: 6px;
-}
-
-/* reuse your mini-card/mini-cell from earlier */
-#pattern-preview .mini-card {
-  display: grid;
-  grid-template-columns: repeat(5, 28px);
-  grid-auto-rows: 28px;
-  gap: 6px;
-  justify-content: center;
-  margin: 6px auto 2px;
-}
-#pattern-preview .mini-cell {
-  border-radius: 6px;
-  background: #ffffff;
-  border: 1px solid rgba(0,0,0,0.08);
-  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
-}
-#pattern-preview .mini-cell.free {
-  background: #f0faf6;
-  border-style: dashed;
-  border-color: rgba(0,0,0,0.15);
-}
-#pattern-preview .mini-cell.on {
-  background: linear-gradient(180deg, var(--green-light), var(--green));
-  border-color: rgba(0,0,0,0.12);
-  box-shadow: 0 0 10px rgba(212,175,55,0.55);
-  animation: previewPulse 1.1s ease-in-out infinite alternate;
-}
-.hidden { display: none !important; }
-
-/* Make sure both #pattern-preview and #pattern-preview-flyout share visuals */
-#pattern-preview .pf-title,
-#pattern-preview-flyout .pf-title,
-#pattern-preview .preview-title,
-#pattern-preview-flyout .preview-title {
-  font-family: 'Mountains of Christmas', cursive;
-  font-weight: 700; color: var(--green); text-align: center; margin-bottom: 6px;
-}
-
-#pattern-preview .pf-note,
-#pattern-preview-flyout .pf-note,
-#pattern-preview .preview-note,
-#pattern-preview-flyout .preview-note {
-  font-size: .85rem; color: #5a6d66; text-align: center; margin-bottom: 6px;
-}
-
-#pattern-preview .mini-card,
-#pattern-preview-flyout .mini-card {
-  display: grid;
-  grid-template-columns: repeat(5, 28px);
-  grid-auto-rows: 28px;
-  gap: 6px;
-  justify-content: center;
-  margin: 6px auto 2px;
-}
-
-#pattern-preview .mini-cell,
-#pattern-preview-flyout .mini-cell {
-  border-radius: 6px;
-  background: #ffffff;
-  border: 1px solid rgba(0,0,0,0.08);
-  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
-}
-
-#pattern-preview .mini-cell.free,
-#pattern-preview-flyout .mini-cell.free {
-  background: #f0faf6;
-  border-style: dashed;
-  border-color: rgba(0,0,0,0.15);
-}
-
-#pattern-preview .mini-cell.on,
-#pattern-preview-flyout .mini-cell.on {
-  background: linear-gradient(180deg, var(--green-light), var(--green));
-  border-color: rgba(0,0,0,0.12);
-  box-shadow: 0 0 10px rgba(212,175,55,0.55);
-  animation: previewPulse 1.1s ease-in-out infinite alternate;
+/* Reduced motion: no bounce, same look */
+@media (prefers-reduced-motion: reduce) {
+  .card-cell.free:hover { transform: none; }
 }
