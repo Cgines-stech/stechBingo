@@ -115,55 +115,76 @@
     z-index: 1;
   }
 
-/* FREE cell as a clean canvas for the bauble */
-.print-cell.free {
-  position: relative;
-  overflow: hidden;
-  /* remove the present look: no stripes, no ribbons */
-  background: #ffffff; /* or 'transparent' if you prefer */
-  box-shadow: none;
-  text-shadow: none;
-}
+/* ===== Frosty Snowflake (pure CSS) ===== */
+@media print {
+  .print-cell.free {
+    position: relative;
+    overflow: hidden;
+    background: #fff;           /* clean canvas */
+    box-shadow: none;
+    text-shadow: none;
 
-/* The bauble body */
-.print-cell.free::before {
-  content: "";
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  width: 0.55in;              /* fits nicely inside a 0.75in cell */
-  height: 0.55in;
-  transform: translate(-50%, -50%);
-  border-radius: 50%;
-  /* glossy gold look */
-  background:
-    radial-gradient(circle at 32% 30%, #ffffffcc 10%, transparent 12%),
-    radial-gradient(circle at 64% 70%, #00000022 8%, transparent 10%),
-    radial-gradient(circle at 50% 58%, #ffd86a 0%, #ffc233 45%, #d19a1a 100%);
-  box-shadow: 0 1px 2px rgba(0,0,0,0.25);
-  z-index: 1;
-}
+    /* tweakable vars */
+    --flake: #7fd4ff;          /* main flake color */
+    --shine: #eaf7ff;          /* highlight/glow */
+    --stem-w: 0.075in;         /* spoke thickness */
+    --stem-h: 0.62in;          /* spoke length */
+    --cap:    0.16in;          /* round cap diameter */
+    --spark:  0.08in;          /* tiny ice dots */
+  }
 
-/* Cap + loop above the bauble */
-.print-cell.free::after {
-  content: "";
-  position: absolute;
-  left: 50%;
-  /* place the cap right at the top of the bauble:
-     50% (center) - radius (0.275in) */
-  top: calc(50% - 0.275in);
-  width: 0.55in;
-  height: 0.35in;
-  transform: translateX(-50%);
-  background:
-    /* loop ring */
-    radial-gradient(circle closest-side,
-      transparent 72%, #c9a84a 73% 84%, transparent 85%)
-      center -0.02in / 0.20in 0.20in no-repeat,
-    /* cap */
-    linear-gradient(#c9a84a, #a9862e)
-      center 0.10in / 0.28in 0.16in no-repeat;
-  z-index: 2;
+  /* center glow + vertical spoke (all as backgrounds so no extra elements) */
+  .print-cell.free {
+    background:
+      /* center glow */
+      radial-gradient(circle at 50% 50%, var(--shine) 0 18%, transparent 19%) center/100% 100% no-repeat,
+
+      /* top/bottom caps for vertical spoke */
+      radial-gradient(circle, var(--flake) 62%, transparent 63%) center calc(50% - (var(--stem-h)/2)) / var(--cap) var(--cap) no-repeat,
+      radial-gradient(circle, var(--flake) 62%, transparent 63%) center calc(50% + (var(--stem-h)/2)) / var(--cap) var(--cap) no-repeat,
+
+      /* optional tiny “ice” dots along vertical spoke */
+      radial-gradient(circle, var(--shine) 25%, transparent 26%) 50% calc(50% - var(--stem-h)/4) / var(--spark) var(--spark) no-repeat,
+      radial-gradient(circle, var(--shine) 25%, transparent 26%) 50% calc(50% + var(--stem-h)/4) / var(--spark) var(--spark) no-repeat,
+
+      /* vertical stem */
+      linear-gradient(var(--flake), var(--flake)) center/ var(--stem-w) var(--stem-h) no-repeat,
+
+      /* base fill */
+      #fff;
+  }
+
+  /* two diagonal spokes at ±60° using pseudos */
+  .print-cell.free::before,
+  .print-cell.free::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: var(--stem-w);
+    height: var(--stem-h);
+    transform: translate(-50%, -50%);
+    border-radius: 999px;
+    z-index: 1;
+    /* stem + caps + sparkles */
+    background:
+      /* top/bottom caps */
+      radial-gradient(circle, var(--flake) 62%, transparent 63%) center 0.02in / var(--cap) var(--cap) no-repeat,
+      radial-gradient(circle, var(--flake) 62%, transparent 63%) center calc(100% - 0.02in) / var(--cap) var(--cap) no-repeat,
+
+      /* sparkles along spoke */
+      radial-gradient(circle, var(--shine) 25%, transparent 26%) 50% 25%/ var(--spark) var(--spark) no-repeat,
+      radial-gradient(circle, var(--shine) 25%, transparent 26%) 50% 75%/ var(--spark) var(--spark) no-repeat,
+
+      /* stem */
+      linear-gradient(var(--flake), var(--flake));
+    box-shadow:
+      0 0 1px rgba(0,0,0,0.08),
+      0 0 6px 1px rgba(127,212,255,0.25);
+  }
+
+  .print-cell.free::before { transform: translate(-50%, -50%) rotate(60deg); }
+  .print-cell.free::after  { transform: translate(-50%, -50%) rotate(-60deg); }
 }
 
 }
