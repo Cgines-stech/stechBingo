@@ -118,7 +118,7 @@
   /* ===== Free cell ===== */
   @media print {
     .print-cell.free {
-      background: #fff url('./images/greenpresent.png') center center / contain no-repeat;
+      background: #fff url('./images/greenpresentredbow.png') center center / contain no-repeat;
       border: 1px solid #000;
     }
   }
