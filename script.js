@@ -50,17 +50,37 @@ function speakNumber(num) {
   speechSynthesis.speak(utter);
 }
 
-// ===== Simple Speech Helper =====
-function speakText(line) {
-  if (typeof window.speechSynthesis === "undefined") return;
-  const utter = new SpeechSynthesisUtterance(line);
-  utter.rate = 0.95;
-  // prefer an English voice if available
-  const voices = speechSynthesis.getVoices();
-  const en = voices.find(v => /^en(-|_|$)/i.test(v.lang));
-  if (en) utter.voice = en;
-  speechSynthesis.cancel();
-  speechSynthesis.speak(utter);
+// Robust TTS that waits for voices if needed
+let __voicesReady = false;
+if (typeof speechSynthesis !== "undefined") {
+  speechSynthesis.onvoiceschanged = () => { __voicesReady = true; };
+}
+
+function speakText(text, opts = {}) {
+  if (typeof speechSynthesis === "undefined") return;
+
+  const go = () => {
+    const utter = new SpeechSynthesisUtterance(text);
+    utter.rate  = opts.rate  ?? 0.95;
+    utter.pitch = opts.pitch ?? 1.0;
+
+    // Prefer selected voice if present; else first English voice
+    const list = speechSynthesis.getVoices();
+    const sel = document.getElementById("voice-select")?.value;
+    let v = (sel && list.find(x => x.name === sel)) || list.find(x => /^en(-|_|$)/i.test(x.lang));
+    if (v) utter.voice = v;
+
+    // Don't aggressively cancel here; it can clip/kill the utterance on some browsers.
+    // If you need to stop overlaps, you can pause/clear a queue yourself.
+    speechSynthesis.speak(utter);
+  };
+
+  // If voices are not ready yet, retry a couple of times quickly
+  if (!__voicesReady && speechSynthesis.getVoices().length === 0) {
+    setTimeout(go, 120); // brief delay lets voices populate
+  } else {
+    go();
+  }
 }
 
 // ===== Confetti trigger via localStorage =====
@@ -111,34 +131,36 @@ function runConfetti(durationMs = 1600) {
   }
   const ctx = canvas.getContext("2d");
 
-  // Size to viewport
-  const resize = () => {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-  };
-  resize();
-  window.addEventListener("resize", resize, { once: true });
+// Size to viewport (account for devicePixelRatio)
+const resize = () => {
+  const dpr = Math.max(1, window.devicePixelRatio || 1);
+  canvas.width  = Math.floor(window.innerWidth  * dpr);
+  canvas.height = Math.floor(window.innerHeight * dpr);
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0); // scale drawings to CSS pixels
+};
+resize();
+window.addEventListener("resize", resize);
 
-  // Make particles
-  const colors = ["#f44336","#ff9800","#ffeb3b","#4caf50","#2196f3","#9c27b0"];
-  const N = 140; // particles
-  const parts = Array.from({ length: N }, () => {
-    const angle = Math.random() * Math.PI - Math.PI/2; // mostly up
-    const speed = 6 + Math.random() * 6;
-    return {
-      x: canvas.width / 2,
-      y: canvas.height / 4,
-      vx: Math.cos(angle) * speed,
-      vy: Math.sin(angle) * speed - 4,
-      g: 0.22 + Math.random() * 0.25,
-      w: 6 + Math.random() * 6,
-      h: 10 + Math.random() * 12,
-      r: Math.random() * Math.PI,
-      vr: (Math.random() - 0.5) * 0.3,
-      color: colors[Math.floor(Math.random() * colors.length)],
-      alpha: 1
-    };
-  });
+// Make particles (spread left/right & go upward)
+const colors = ["#f44336","#ff9800","#ffeb3b","#4caf50","#2196f3","#9c27b0"];
+const N = 160;
+const parts = Array.from({ length: N }, () => {
+  const speed = 6 + Math.random() * 6;
+  return {
+    x: canvas.width / 2,
+    y: canvas.height / 4,
+    vx: (Math.random() * 2 - 1) * speed,   // negative or positive
+    vy: -(8 + Math.random() * 6),          // strong upward burst
+    g: 0.22 + Math.random() * 0.25,
+    w: 6 + Math.random() * 6,
+    h: 10 + Math.random() * 12,
+    r: Math.random() * Math.PI,
+    vr: (Math.random() - 0.5) * 0.3,
+    color: colors[Math.floor(Math.random() * colors.length)],
+    alpha: 1
+  };
+});
+
 
   const start = performance.now();
   let anim;
