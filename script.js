@@ -50,6 +50,146 @@ function speakNumber(num) {
   speechSynthesis.speak(utter);
 }
 
+// ===== Simple Speech Helper =====
+function speakText(line) {
+  if (typeof window.speechSynthesis === "undefined") return;
+  const utter = new SpeechSynthesisUtterance(line);
+  utter.rate = 0.95;
+  // prefer an English voice if available
+  const voices = speechSynthesis.getVoices();
+  const en = voices.find(v => /^en(-|_|$)/i.test(v.lang));
+  if (en) utter.voice = en;
+  speechSynthesis.cancel();
+  speechSynthesis.speak(utter);
+}
+
+// ===== Confetti trigger via localStorage =====
+// Call this from control.html; index.html will listen and pop confetti.
+function triggerConfetti() {
+  // set a unique value each time
+  localStorage.setItem("confettiTriggerAt", String(Date.now()));
+}
+
+// ===== Public function for the button =====
+function announceBingo() {
+  // Voice announcement
+  speakText("Bingo!");
+
+  // Also show a quick on-screen note in the control panel
+  const announcerDisplay = document.getElementById("announcer-display");
+  if (announcerDisplay) {
+    announcerDisplay.innerHTML = `
+      <div class="announce-letter">🎉</div>
+      <div class="announce-ball">BINGO!</div>
+    `;
+    setTimeout(() => (announcerDisplay.innerHTML = ""), 1800);
+  }
+
+  // Fire confetti on the main board page (index.html)
+  triggerConfetti();
+}
+
+
+// ===== Lightweight Confetti (no external libs) =====
+function runConfetti(durationMs = 1600) {
+  // Don't run on the control panel page
+  if (document.body.classList && document.body.classList.contains("control-panel")) return;
+
+  // Create an overlay canvas
+  let canvas = document.getElementById("confetti-canvas");
+  if (!canvas) {
+    canvas = document.createElement("canvas");
+    canvas.id = "confetti-canvas";
+    canvas.style.position = "fixed";
+    canvas.style.left = "0";
+    canvas.style.top = "0";
+    canvas.style.width = "100%";
+    canvas.style.height = "100%";
+    canvas.style.pointerEvents = "none";
+    canvas.style.zIndex = "9999";
+    document.body.appendChild(canvas);
+  }
+  const ctx = canvas.getContext("2d");
+
+  // Size to viewport
+  const resize = () => {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  };
+  resize();
+  window.addEventListener("resize", resize, { once: true });
+
+  // Make particles
+  const colors = ["#f44336","#ff9800","#ffeb3b","#4caf50","#2196f3","#9c27b0"];
+  const N = 140; // particles
+  const parts = Array.from({ length: N }, () => {
+    const angle = Math.random() * Math.PI - Math.PI/2; // mostly up
+    const speed = 6 + Math.random() * 6;
+    return {
+      x: canvas.width / 2,
+      y: canvas.height / 4,
+      vx: Math.cos(angle) * speed,
+      vy: Math.sin(angle) * speed - 4,
+      g: 0.22 + Math.random() * 0.25,
+      w: 6 + Math.random() * 6,
+      h: 10 + Math.random() * 12,
+      r: Math.random() * Math.PI,
+      vr: (Math.random() - 0.5) * 0.3,
+      color: colors[Math.floor(Math.random() * colors.length)],
+      alpha: 1
+    };
+  });
+
+  const start = performance.now();
+  let anim;
+  const tick = (t) => {
+    const elapsed = t - start;
+    const done = elapsed >= durationMs;
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    parts.forEach(p => {
+      p.vy += p.g;
+      p.x += p.vx;
+      p.y += p.vy;
+      p.r += p.vr;
+      // fade near the end
+      if (elapsed > durationMs * 0.7) p.alpha = Math.max(0, 1 - (elapsed - durationMs * 0.7) / (durationMs * 0.3));
+
+      ctx.save();
+      ctx.globalAlpha = p.alpha;
+      ctx.translate(p.x, p.y);
+      ctx.rotate(p.r);
+      ctx.fillStyle = p.color;
+      ctx.fillRect(-p.w/2, -p.h/2, p.w, p.h);
+      ctx.restore();
+    });
+
+    if (!done) {
+      anim = requestAnimationFrame(tick);
+    } else {
+      // Cleanup
+      cancelAnimationFrame(anim);
+      setTimeout(() => {
+        if (canvas && canvas.parentNode) canvas.parentNode.removeChild(canvas);
+      }, 50);
+    }
+  };
+  anim = requestAnimationFrame(tick);
+}
+
+// Listen for confetti triggers from control.html
+window.addEventListener("storage", (e) => {
+  if (e.key === "confettiTriggerAt" && e.newValue) {
+    // Only main board should run confetti
+    if (!document.body.classList.contains("control-panel")) {
+      runConfetti();
+      // optional: also speak "Bingo!" on the board page
+      try { speakText("Bingo!"); } catch (_) {}
+    }
+  }
+});
+
+
 // --- Pattern Engine ---------------------------------------------------------
 const P = {
   // All straight lines (5 rows, 5 cols, 2 diags)
