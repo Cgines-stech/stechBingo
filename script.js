@@ -7,6 +7,49 @@ const lastCalledDisplay = document.getElementById("last-called");
 const controlLastCalled = document.getElementById("control-last-called");
 const controlHistory = document.getElementById("control-history");
 
+// --- Voice Helpers ----------------------------------------------------------
+function populateVoiceList() {
+  const select = document.getElementById("voice-select");
+  if (!select || typeof speechSynthesis === "undefined") return;
+
+  const voices = speechSynthesis.getVoices();
+  select.innerHTML = "";
+  voices.forEach(v => {
+    const opt = document.createElement("option");
+    opt.value = v.name;
+    opt.textContent = `${v.name} (${v.lang})`;
+    select.appendChild(opt);
+  });
+}
+
+// Browser sometimes loads voices asynchronously
+if (typeof speechSynthesis !== "undefined") {
+  populateVoiceList();
+  speechSynthesis.onvoiceschanged = populateVoiceList;
+}
+
+function letterFor(num) {
+  return num <= 15 ? "B" : num <= 30 ? "I" : num <= 45 ? "N" : num <= 60 ? "G" : "O";
+}
+
+function speakNumber(num) {
+  if (typeof speechSynthesis === "undefined") return;
+  const toggle = document.getElementById("voice-enabled");
+  if (toggle && !toggle.checked) return;
+
+  const letter = letterFor(num);
+  const utter = new SpeechSynthesisUtterance(`${letter} ${num}`);
+  utter.rate = 0.9;
+
+  const selectedName = document.getElementById("voice-select")?.value;
+  const voices = speechSynthesis.getVoices();
+  const chosen = voices.find(v => v.name === selectedName);
+  if (chosen) utter.voice = chosen;
+
+  speechSynthesis.cancel(); // stop any overlapping speech
+  speechSynthesis.speak(utter);
+}
+
 // --- Pattern Engine ---------------------------------------------------------
 const P = {
   // All straight lines (5 rows, 5 cols, 2 diags)
@@ -349,6 +392,9 @@ function callNumber(num) {
   }
   state.lastCalled = num;
   setState(state);
+
+  // 🔊 Say the number
+  speakNumber(num);
 }
 
 function toggleView() {
