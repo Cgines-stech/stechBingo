@@ -947,6 +947,182 @@ if (winnerList) {
 
 }
 
+// === Auto Play (Control Panel only) =========================================
+(function setupAutoPlay() {
+  // Only run on control panel
+  if (!document.body.classList.contains("control-panel")) return;
+
+  const KEY_ENABLED = "bingoAutoEnabled";
+  const KEY_SECONDS = "bingoAutoSeconds";
+
+  const chk = document.getElementById("autoplay-enabled");
+  const sec = document.getElementById("autoplay-seconds");
+  const cd  = document.getElementById("autoplay-countdown");
+
+  if (!chk || !sec || !cd) return; // UI not present
+
+  // Internal state
+  let timerId = null;
+  let targetAtMs = 0;
+
+  // Helpers
+  function getSeconds() {
+    const v = parseInt(sec.value, 10);
+    return isFinite(v) ? Math.min(120, Math.max(2, v)) : 7;
+  }
+  function allNumbersCalled() {
+    const s = getState();
+    const count = s.calledNumbers ? s.calledNumbers.length : 0;
+    return count >= totalNumbers;
+  }
+  function savePrefs() {
+    localStorage.setItem(KEY_ENABLED, chk.checked ? "1" : "0");
+    localStorage.setItem(KEY_SECONDS, String(getSeconds()));
+  }
+  function loadPrefs() {
+    const en = localStorage.getItem(KEY_ENABLED);
+    const ss = localStorage.getItem(KEY_SECONDS);
+    if (en !== null) chk.checked = en === "1";
+    if (ss !== null) sec.value = ss;
+  }
+
+  function setCountdownLabel(msLeft) {
+    if (!chk.checked) {
+      cd.textContent = "(idle)";
+      return;
+    }
+    if (allNumbersCalled()) {
+      cd.textContent = "All numbers called";
+      return;
+    }
+    const secs = Math.max(0, Math.ceil(msLeft / 1000));
+    cd.textContent = `${secs}s`;
+  }
+
+  function stopTimer() {
+    if (timerId) {
+      clearInterval(timerId);
+      timerId = null;
+    }
+    setCountdownLabel(0);
+  }
+
+  function scheduleNextTick(fullReset = false) {
+    // If we've already finished all numbers, stop.
+    if (allNumbersCalled()) {
+      stopTimer();
+      return;
+    }
+
+    const now = performance.now();
+    const periodMs = getSeconds() * 1000;
+
+    if (fullReset || targetAtMs <= now) {
+      targetAtMs = now + periodMs;
+    }
+
+    if (!timerId) {
+      timerId = setInterval(() => {
+        const now = performance.now();
+        const msLeft = targetAtMs - now;
+
+        // Update label
+        setCountdownLabel(msLeft);
+
+        if (msLeft <= 0) {
+          // Time to call next number
+          // Safety: if no numbers left, stop.
+          if (allNumbersCalled()) {
+            stopTimer();
+            return;
+          }
+          callNextNumber();
+
+          // Reset next cycle
+          targetAtMs = performance.now() + periodMs;
+          setCountdownLabel(periodMs);
+        }
+      }, 200); // smooth-ish updates without being heavy
+    }
+  }
+
+  function startTimer() {
+    if (!chk.checked) return;
+    scheduleNextTick(true);
+  }
+
+  // Event bindings
+  chk.addEventListener("change", () => {
+    savePrefs();
+    if (chk.checked) {
+      startTimer();
+    } else {
+      stopTimer();
+    }
+  });
+
+  sec.addEventListener("change", () => {
+    // normalize and persist
+    sec.value = String(getSeconds());
+    savePrefs();
+
+    // If running, restart the cycle at the new duration
+    if (chk.checked) {
+      targetAtMs = 0; // force immediate reset of cycle
+      scheduleNextTick(true);
+    }
+  });
+
+  // If you manually call a number, reset the countdown so it feels natural
+  const origCallNextNumber = window.callNextNumber;
+  window.callNextNumber = function patchedCallNextNumber() {
+    origCallNextNumber.apply(this, arguments);
+    if (chk.checked) {
+      // restart the countdown fresh after a manual/auto call
+      targetAtMs = 0;
+      scheduleNextTick(true);
+    }
+  };
+
+  // Also reset countdown when you use manual input button
+  const origCallManualNumber = window.callManualNumber;
+  window.callManualNumber = function patchedCallManual() {
+    origCallManualNumber.apply(this, arguments);
+    if (chk.checked) {
+      targetAtMs = 0;
+      scheduleNextTick(true);
+    }
+  };
+
+  // If you reset the game, keep your autoplay preference, but restart the timer
+  const origResetGame = window.resetGame;
+  window.resetGame = function patchedReset() {
+    origResetGame.apply(this, arguments);
+    if (chk.checked) {
+      targetAtMs = 0;
+      scheduleNextTick(true);
+    } else {
+      stopTimer();
+    }
+  };
+
+  // Keep countdown label in sync if another tab updates state
+  window.addEventListener("storage", () => {
+    if (!chk.checked) return;
+    // if we just finished all numbers elsewhere, stop
+    if (allNumbersCalled()) {
+      stopTimer();
+    }
+  });
+
+  // Init
+  loadPrefs();
+  // Normalize any weird values
+  sec.value = String(getSeconds());
+  setCountdownLabel(0);
+  if (chk.checked) startTimer();
+})();
+
 function hasBingo(card, called) {
   const state = getState();
   return evaluatePattern(card, called, state.currentPattern).won;
