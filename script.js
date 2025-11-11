@@ -22,12 +22,6 @@ function populateVoiceList() {
   });
 }
 
-// Browser sometimes loads voices asynchronously
-if (typeof speechSynthesis !== "undefined") {
-  populateVoiceList();
-  speechSynthesis.onvoiceschanged = populateVoiceList;
-}
-
 function letterFor(num) {
   return num <= 15 ? "B" : num <= 30 ? "I" : num <= 45 ? "N" : num <= 60 ? "G" : "O";
 }
@@ -50,11 +44,53 @@ function speakNumber(num) {
   speechSynthesis.speak(utter);
 }
 
-// Robust TTS that waits for voices if needed
+// --- Voice init (single handler + remember selection) -----------------------
 let __voicesReady = false;
-if (typeof speechSynthesis !== "undefined") {
-  speechSynthesis.onvoiceschanged = () => { __voicesReady = true; };
+
+function populateVoiceList() {
+  const select = document.getElementById("voice-select");
+  if (!select || typeof speechSynthesis === "undefined") return;
+
+  const voices = speechSynthesis.getVoices();
+  const prev = localStorage.getItem("bingoVoiceName") || select.value || "";
+
+  select.innerHTML = "";
+  voices.forEach(v => {
+    const opt = document.createElement("option");
+    opt.value = v.name;
+    opt.textContent = `${v.name} (${v.lang})`;
+    if (v.name === prev) opt.selected = true;
+    select.appendChild(opt);
+  });
 }
+
+function initVoices() {
+  if (typeof speechSynthesis === "undefined") return;
+
+  // Single handler: mark ready + populate list
+  speechSynthesis.onvoiceschanged = () => {
+    __voicesReady = true;
+    populateVoiceList();
+  };
+
+  // In some browsers, voices are already available immediately
+  if (speechSynthesis.getVoices().length > 0) {
+    __voicesReady = true;
+    populateVoiceList();
+  }
+
+  // Save selection when user changes it
+  const select = document.getElementById("voice-select");
+  if (select) {
+    select.addEventListener("change", () => {
+      localStorage.setItem("bingoVoiceName", select.value);
+    });
+  }
+}
+
+// Call once UI exists
+window.addEventListener("DOMContentLoaded", initVoices);
+
 
 function speakText(text, opts = {}) {
   if (typeof speechSynthesis === "undefined") return;
@@ -82,6 +118,50 @@ function speakText(text, opts = {}) {
     go();
   }
 }
+
+function getSelectedVoice() {
+  if (typeof speechSynthesis === "undefined") return null;
+  const list = speechSynthesis.getVoices();
+  const saved = localStorage.getItem("bingoVoiceName");
+  const sel = document.getElementById("voice-select")?.value || saved;
+  return (sel && list.find(v => v.name === sel)) || list.find(v => /^en(-|_|$)/i.test(v.lang)) || null;
+}
+
+function speakNumber(num) {
+  if (typeof speechSynthesis === "undefined") return;
+  const toggle = document.getElementById("voice-enabled");
+  if (toggle && !toggle.checked) return;
+
+  const utter = new SpeechSynthesisUtterance(`${letterFor(num)} ${num}`);
+  utter.rate = 0.9;
+
+  const v = getSelectedVoice();
+  if (v) utter.voice = v;
+
+  // Optional: comment out cancel if it seems to silence on your setup
+  // speechSynthesis.cancel();
+  speechSynthesis.speak(utter);
+}
+
+function speakText(text, opts = {}) {
+  if (typeof speechSynthesis === "undefined") return;
+
+  const go = () => {
+    const utter = new SpeechSynthesisUtterance(text);
+    utter.rate  = opts.rate  ?? 0.95;
+    utter.pitch = opts.pitch ?? 1.0;
+    const v = getSelectedVoice();
+    if (v) utter.voice = v;
+    speechSynthesis.speak(utter);
+  };
+
+  if (!__voicesReady && speechSynthesis.getVoices().length === 0) {
+    setTimeout(go, 120);
+  } else {
+    go();
+  }
+}
+
 
 // ===== Confetti trigger via localStorage =====
 // Call this from control.html; index.html will listen and pop confetti.
