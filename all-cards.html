@@ -48,54 +48,87 @@
   <h1>All Bingo Cards</h1>
   <div class="card-container" id="all-cards"></div>
 
-  <script>
-  const calledNumbers = JSON.parse(localStorage.getItem("bingoState") || "{}").calledNumbers || [];
+<script>
+  const state = JSON.parse(localStorage.getItem("bingoState") || "{}");
+  const calledNumbers = state.calledNumbers || [];
+
+  const maxCard = Object.keys(cardData).reduce((max, id) => {
+    const n = parseInt(id, 10);
+    return Number.isFinite(n) && n > max ? n : max;
+  }, 0);
+
+  const rawRange = state.cardRange || { start: 1, end: maxCard };
+  let start = parseInt(rawRange.start, 10);
+  let end   = parseInt(rawRange.end,   10);
+
+  if (!Number.isFinite(start)) start = 1;
+  if (!Number.isFinite(end))   end   = maxCard;
+
+  start = Math.max(1, Math.min(start, maxCard));
+  end   = Math.max(start, Math.min(end, maxCard));
+
   const container = document.getElementById("all-cards");
+
+  function isCardInRange(id) {
+    const n = parseInt(id, 10);
+    if (!Number.isFinite(n)) return false;
+    return n >= start && n <= end;
+  }
 
   function hasBingo(card, called) {
     const marked = card.map(row => row.map(num => num === 0 || called.includes(num)));
 
-    // Check rows
+    // rows
     for (let r = 0; r < 5; r++) {
       if (marked[r].every(v => v)) return true;
     }
-
-    // Check columns
+    // cols
     for (let c = 0; c < 5; c++) {
       if (marked.every(row => row[c])) return true;
     }
-
-    // Diagonals
+    // diags
     if (marked.every((row, i) => row[i])) return true;
     if (marked.every((row, i) => row[4 - i])) return true;
 
     return false;
   }
 
-  // Collect and sort cards
-  const cardElements = Object.entries(cardData).map(([id, card]) => {
-    const wrapper = document.createElement("div");
-    const isWinner = hasBingo(card, calledNumbers);
-
-    wrapper.className = "card-wrapper" + (isWinner ? " winner" : "");
-    wrapper.innerHTML = `<div class="card-title">Card ${id}</div>`;
-
-    const grid = document.createElement("div");
-    grid.className = "card-grid";
-
-    for (let row of card) {
-      for (let num of row) {
-        const cell = document.createElement("div");
-        const isMarked = num === 0 || calledNumbers.includes(num);
-        cell.className = "card-cell" + (isMarked ? " marked" : "");
-        cell.textContent = num === 0 ? "FREE" : num;
-        grid.appendChild(cell);
-      }
+  // Optional: update heading to show range
+  const heading = document.querySelector("h1");
+  if (heading) {
+    if (start === 1 && end === maxCard) {
+      heading.textContent = "All Bingo Cards";
+    } else {
+      heading.textContent = `Cards in Play: ${start}–${end}`;
     }
+  }
 
-    wrapper.appendChild(grid);
-    return { element: wrapper, isWinner };
-  });
+  // Collect and sort cards
+  const cardElements = Object.entries(cardData)
+    .filter(([id]) => isCardInRange(id))
+    .map(([id, card]) => {
+      const wrapper = document.createElement("div");
+      const isWinner = hasBingo(card, calledNumbers);
+
+      wrapper.className = "card-wrapper" + (isWinner ? " winner" : "");
+      wrapper.innerHTML = `<div class="card-title">Card ${id}</div>`;
+
+      const grid = document.createElement("div");
+      grid.className = "card-grid";
+
+      for (let row of card) {
+        for (let num of row) {
+          const cell = document.createElement("div");
+          const isMarked = num === 0 || calledNumbers.includes(num);
+          cell.className = "card-cell" + (isMarked ? " marked" : "");
+          cell.textContent = num === 0 ? "FREE" : num;
+          grid.appendChild(cell);
+        }
+      }
+
+      wrapper.appendChild(grid);
+      return { element: wrapper, isWinner };
+    });
 
   // Sort: winners first
   cardElements.sort((a, b) => b.isWinner - a.isWinner);
@@ -103,6 +136,7 @@
   // Append to container
   cardElements.forEach(card => container.appendChild(card.element));
 </script>
+
 
 </body>
 </html>

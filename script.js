@@ -7,6 +7,81 @@ const lastCalledDisplay = document.getElementById("last-called");
 const controlLastCalled = document.getElementById("control-last-called");
 const controlHistory = document.getElementById("control-history");
 
+// --- Card Range Helpers -----------------------------------------------------
+
+function getMaxCardNumber() {
+  // Determine highest numeric card id from cardData (e.g., 500)
+  return Object.keys(cardData).reduce((max, id) => {
+    const n = parseInt(id, 10);
+    return Number.isFinite(n) && n > max ? n : max;
+  }, 0);
+}
+
+function getCardRangeFromState(state) {
+  const max = getMaxCardNumber();
+  const raw = state.cardRange || { start: 1, end: max };
+
+  let start = parseInt(raw.start, 10);
+  let end   = parseInt(raw.end,   10);
+
+  if (!Number.isFinite(start)) start = 1;
+  if (!Number.isFinite(end))   end   = max;
+
+  start = Math.max(1, Math.min(start, max));
+  end   = Math.max(start, Math.min(end, max));
+
+  return { start, end };
+}
+
+function isCardInRange(cardId, state) {
+  const { start, end } = getCardRangeFromState(state || getState());
+  const n = parseInt(cardId, 10);
+  if (!Number.isFinite(n)) return false;
+  return n >= start && n <= end;
+}
+
+function applyCardRange() {
+  const startInput = document.getElementById("card-range-start");
+  const endInput   = document.getElementById("card-range-end");
+  if (!startInput || !endInput) return; // not on this page
+
+  const max = getMaxCardNumber();
+
+  let start = parseInt(startInput.value, 10);
+  let end   = parseInt(endInput.value,   10);
+
+  if (!Number.isFinite(start)) start = 1;
+  if (!Number.isFinite(end))   end   = max;
+
+  start = Math.max(1, Math.min(start, max));
+  end   = Math.max(start, Math.min(end, max));
+
+  startInput.value = start;
+  endInput.value   = end;
+
+  const state = getState();
+  state.cardRange = { start, end };
+  setState(state);   // re-evaluate winners and refresh views
+}
+
+function initCardRangeUI() {
+  const startInput = document.getElementById("card-range-start");
+  const endInput   = document.getElementById("card-range-end");
+  if (!startInput || !endInput) return; // not control.html
+
+  const max = getMaxCardNumber();
+  const state = getState();
+  const { start, end } = getCardRangeFromState(state);
+
+  startInput.min = 1;
+  endInput.min   = 1;
+  startInput.max = max;
+  endInput.max   = max;
+
+  startInput.value = start;
+  endInput.value   = end;
+}
+
 // --- Voice Helpers ----------------------------------------------------------
 function populateVoiceList() {
   const select = document.getElementById("voice-select");
@@ -762,41 +837,43 @@ function showPatternFlyout() {
   renderPatternPreview();
 }
 
-
 function renderAllCards(container, calledNumbers) {
   container.innerHTML = "";
 
-  const cards = Object.entries(cardData).map(([id, card]) => {
-    const isWinner = hasBingo(card, calledNumbers);
+  const state = getState();
+  const cards = Object.entries(cardData)
+    .filter(([id]) => isCardInRange(id, state))   // 👈 only cards in range
+    .map(([id, card]) => {
+      const isWinner = hasBingo(card, calledNumbers);
 
-    const wrapper = document.createElement("div");
-    wrapper.className = "card-wrapper" + (isWinner ? " winner" : "");
-    wrapper.innerHTML = `<div class="card-title">Card ${id}</div>`;
+      const wrapper = document.createElement("div");
+      wrapper.className = "card-wrapper" + (isWinner ? " winner" : "");
+      wrapper.innerHTML = `<div class="card-title">Card ${id}</div>`;
 
-    const grid = document.createElement("div");
-    grid.className = "card-grid";
+      const grid = document.createElement("div");
+      grid.className = "card-grid";
 
-    for (let row of card) {
-      for (let num of row) {
-        const cell = document.createElement("div");
-        const isMarked = num === 0 || calledNumbers.includes(num);
-        cell.className = "card-cell" + (isMarked ? " marked" : "");
-        cell.textContent = num === 0 ? "FREE" : num;
-        grid.appendChild(cell);
+      for (let row of card) {
+        for (let num of row) {
+          const cell = document.createElement("div");
+          const isMarked = num === 0 || calledNumbers.includes(num);
+          cell.className = "card-cell" + (isMarked ? " marked" : "");
+          cell.textContent = num === 0 ? "FREE" : num;
+          grid.appendChild(cell);
+        }
       }
-    }
 
-    wrapper.appendChild(grid);
+      wrapper.appendChild(grid);
 
-    if (isWinner) {
-      const badge = document.createElement("div");
-      badge.textContent = "BINGO!";
-      badge.className = "winner-badge";
-      wrapper.appendChild(badge);
-    }
+      if (isWinner) {
+        const badge = document.createElement("div");
+        badge.textContent = "BINGO!";
+        badge.className = "winner-badge";
+        wrapper.appendChild(badge);
+      }
 
-    return { element: wrapper, isWinner };
-  });
+      return { element: wrapper, isWinner };
+    });
 
   // Sort: winners first
   cards.sort((a, b) => b.isWinner - a.isWinner);
@@ -874,13 +951,14 @@ if (winnerList) {
   const pattern = state.currentPattern || "anyLine";
   const winners = (state.winnersByPattern && state.winnersByPattern[pattern]) || {};
   const sorted = Object.entries(winners).sort((a, b) => a[1] - b[1]);
+
   for (let [cardId, drawCount] of sorted) {
+    if (!isCardInRange(cardId, state)) continue;  // 👈 only show cards in range
     const li = document.createElement("li");
     li.textContent = `Card ${cardId}: ${drawCount} draws (${PATTERN_LABELS[pattern] || pattern})`;
     winnerList.appendChild(li);
   }
 }
-
 
   // === View Toggles ===
   const cardView = document.getElementById("card-view");
@@ -1136,7 +1214,10 @@ window.addEventListener("DOMContentLoaded", () => {
     setState(state);
   } else {
     updateDisplays();
-    showPatternFlyout();        // creates the draggable window
-    startPatternPreviewCycle(); // start the rotation once
+    showPatternFlyout();
+    startPatternPreviewCycle();
   }
+
+  // 👇 NEW: initialize the card-range inputs on the control page
+  initCardRangeUI();
 });
