@@ -41,26 +41,6 @@
         <select id="voice-select"></select>
       </div>
 
-       <!-- Auto Play -->
-<div class="panel-row" style="gap: 12px; align-items: center;">
-  <label style="min-width: 80px;"><strong>Auto Play</strong></label>
-  <input
-    type="number"
-    id="autoplay-seconds"
-    min="2"
-    max="120"
-    step="1"
-    value="7"
-    style="width: 80px;"
-    title="Seconds between calls"
-  />
-  <label style="display:flex; align-items:center; gap:6px;">
-    <input type="checkbox" id="autoplay-enabled" />
-    Enable
-  </label>
-  <span id="autoplay-countdown" style="opacity:.8;">(Game Paused)</span>
-</div>
-
 <div class="panel-row" style="gap: 8px; align-items: center;">
   <label style="min-width: 80px;"><strong>Cards in Play (Card Range #'s)</strong></label>
   <input
@@ -83,6 +63,26 @@
   <button class="btn neon" onclick="applyCardRange()">Set</button>
 </div>
 
+       <!-- Auto Play -->
+<div class="panel-row" style="gap: 12px; align-items: center;">
+  <label style="min-width: 80px;"><strong>Auto Play</strong></label>
+  <input
+    type="number"
+    id="autoplay-seconds"
+    min="2"
+    max="120"
+    step="1"
+    value="7"
+    style="width: 80px;"
+    title="Seconds between calls"
+  />
+  <label style="display:flex; align-items:center; gap:6px;">
+    <input type="checkbox" id="autoplay-enabled" />
+    Enable
+  </label>
+  <span id="autoplay-countdown" style="opacity:.8;">(Game Paused)</span>
+</div>
+
       <div class="panel-row">
         <button class="btn neon" onclick="callNextNumber()">Call Next</button>
         <input type="number" id="manual-input" placeholder="Call #" min="1" max="75">
@@ -101,9 +101,6 @@
       <div class="panel-row">
         <button class="btn neon danger" onclick="resetGame()">Reset Game (Pattern becomes regular Bingo)</button>
       </div>
-
-
-
 
       <div class="panel-info">
         <p>Last Called: <span id="control-last-called"></span></p>
