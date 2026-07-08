@@ -132,7 +132,7 @@
   }
 
   .cut-line {
-    width: 100%;
+    width: calc(100% + 120px);
     border-top: 2px dashed #aaa;
     margin: 0;
     position: absolute;
