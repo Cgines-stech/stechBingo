@@ -1,5 +1,6 @@
 /* print-style.css */
-@import url('https://fonts.googleapis.com/css2?family=Mountains+of+Christmas:wght@400;700&display=swap');
+@import url("https://use.typekit.net/kbi4fnp.css");
+
 
 @media print {
   @page {
@@ -66,9 +67,10 @@
   }
 
   .print-card-inner h2 {
-    font-family: 'Mountains of Christmas', cursive;
+    font-family: "itc-avant-garde-gothic-pro", sans-serif;
+    font-weight: 700;
+    font-style: normal;
     font-size: 1.1rem; /* card id */
-    font-weight: bold;
     padding: 4px 8px;
     border: 2px solid #97b2bc;
     border-radius: 4px;
