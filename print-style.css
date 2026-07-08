@@ -145,7 +145,7 @@
   @media print {
     .print-cell.free {
       background: url('./images/BingoCardFreeSpot.png') center center / contain no-repeat;
-      border: 1px solid #000;
+      border: 1px solid #97b2bc;
     }
   }
 }
