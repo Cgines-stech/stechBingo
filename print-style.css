@@ -1,6 +1,14 @@
 /* print-style.css */
 @import url("https://use.typekit.net/kbi4fnp.css");
 
+@font-face {
+    font-family: 'Tungsten';
+    src: url('fonts/tungsten-book.woff2') format('woff2'),
+         url('fonts/tungsten-book.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
 
 @media print {
   @page {
@@ -94,9 +102,7 @@
     font-size: 2.6rem; /* card numbers */
     font-weight: bold;
     text-align: center;
-    font-family: 'Tungsten';
-    src: url('fonts/tungsten-book.woff2') format('woff2'),
-         url('fonts/tungsten-book.woff') format('woff');
+    font-family: 'Tungsten', sans-serif;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -106,9 +112,7 @@
   .print-cell.header {
     border: none;
     font-size: 3.6rem;
-    font-family: 'Tungsten';
-    src: url('fonts/tungsten-book.woff2') format('woff2'),
-         url('fonts/tungsten-book.woff') format('woff');
+    font-family: "itc-avant-garde-gothic-pro", sans-serif;
   }
 
   .cut-line {
