@@ -26,7 +26,7 @@
     margin: 0;
     padding: 0;
     background-color: white;
-    font-family: 'Mountains of Christmas', cursive;
+    font-family: "itc-avant-garde-gothic-pro", sans-serif;
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
     font-synthesis: none;
@@ -94,7 +94,9 @@
     font-size: 2.6rem; /* card numbers */
     font-weight: bold;
     text-align: center;
-    font-family: 'Mountains of Christmas', cursive;
+    font-family: 'Tungsten';
+    src: url('fonts/tungsten-book.woff2') format('woff2'),
+         url('fonts/tungsten-book.woff') format('woff');
     display: flex;
     align-items: center;
     justify-content: center;
@@ -104,7 +106,9 @@
   .print-cell.header {
     border: none;
     font-size: 3.6rem;
-    font-family: 'Mountains of Christmas', cursive;
+    font-family: 'Tungsten';
+    src: url('fonts/tungsten-book.woff2') format('woff2'),
+         url('fonts/tungsten-book.woff') format('woff');
   }
 
   .cut-line {
