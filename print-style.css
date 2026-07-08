@@ -14,7 +14,7 @@
     left: 0;
     width: 100vw;
     height: 100vh;
-    background-image: url('./images/image002.png');
+    background-image: url('./images/BingoCardFinal.png');
     background-size: 100% 100%;
     background-position: center;
     background-repeat: no-repeat;
@@ -118,7 +118,7 @@
   /* ===== Free cell ===== */
   @media print {
     .print-cell.free {
-      background: #fff url('./images/image003.png') center center / contain no-repeat;
+      background: #fff url('./images/BingoCardFreeSpot.png') center center / contain no-repeat;
       border: 1px solid #000;
     }
   }
