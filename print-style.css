@@ -1,11 +1,23 @@
 /* print-style.css */
-@import url("https://use.typekit.net/kbi4fnp.css");
+/* ITC Avant Garde Gothic Pro is loaded via <link> in each HTML file's <head>
+   (https://use.typekit.net/kbi4fnp.css) — more reliable than @import here. */
 
 @font-face {
     font-family: 'Tungsten';
-    src: url('fonts/tungsten-book.woff2') format('woff2'),
-         url('fonts/tungsten-book.woff') format('woff');
+    src: url('fonts/Tungsten-Book.woff2') format('woff2'),
+         url('fonts/Tungsten-Book.woff') format('woff'),
+         url('fonts/Tungsten-Book.otf') format('opentype');
     font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Tungsten';
+    src: url('fonts/Tungsten-Bold.woff2') format('woff2'),
+         url('fonts/Tungsten-Bold.woff') format('woff'),
+         url('fonts/Tungsten-Bold.otf') format('opentype');
+    font-weight: bold;
     font-style: normal;
     font-display: swap;
 }
@@ -100,7 +112,8 @@
     height: 0.75in;
     border: 1px solid #97b2bc; 
     font-size: 2.6rem; /* card numbers */
-    font-weight: bold;
+    font-weight: normal; /* Tungsten "Book" is its own weight, not a bolded variant */
+    color: #97b2bc;
     text-align: center;
     font-family: 'Tungsten', sans-serif;
     display: flex;
@@ -113,6 +126,9 @@
     border: none;
     font-size: 3.6rem;
     font-family: "itc-avant-garde-gothic-pro", sans-serif;
+    font-weight: 700;
+    font-style: normal;
+    color: #ffffff;
   }
 
   .cut-line {
