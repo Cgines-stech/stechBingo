@@ -144,7 +144,7 @@
   /* ===== Free cell ===== */
   @media print {
     .print-cell.free {
-      background: #fff url('./images/BingoCardFreeSpot.png') center center / contain no-repeat;
+      background: url('./images/BingoCardFreeSpot.png') center center / contain no-repeat;
       border: 1px solid #000;
     }
   }
