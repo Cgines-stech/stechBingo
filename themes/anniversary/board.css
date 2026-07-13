@@ -49,6 +49,10 @@ body {
     url('../../images/Anniversary25Background.png') center bottom / cover no-repeat fixed,
     radial-gradient(circle at 50% 0%, var(--navy) 0%, var(--navy-deep) 75%);
   min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   position: relative;
   overflow-x: hidden;
 }
@@ -98,8 +102,8 @@ h1, h2, h3, .glow-title, #pattern-banner label, .announce-letter {
   line-height: calc(var(--ball-d) * 1.7);
   border-radius: 50%;
   margin: 26px auto 12px;
-  font-family: 'Atkinson Hyperlegible', 'Tungsten', sans-serif;
-  font-size: calc(var(--ball-d) * 0.5);
+  font-family: 'Atkinson Hyperlegible', sans-serif;
+  font-size: calc(var(--ball-d) * 0.72);
   font-weight: bold;
   background: rgba(255, 255, 255, 0.14);
   border: 2px solid rgba(253, 188, 89, 0.4);
