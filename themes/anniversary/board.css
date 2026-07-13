@@ -19,6 +19,11 @@
   font-display: swap;
 }
 
+/* Atkinson Hyperlegible — designed by the Braille Institute specifically
+   for readability at low vision; used for the actual call numbers so
+   they stay easy to read fast, even though Tungsten stays for branding. */
+@import url('https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&display=swap');
+
 :root {
   --navy: #0b415f;
   --navy-deep: #082e44;
@@ -29,6 +34,10 @@
   --steel-dark: #5f7d88;
   --bronze: #c98a4b;
   --white: #ffffff;
+
+  /* Ball/label size — scales with viewport width but stays round,
+     and keeps the whole grid at roughly 3/4 of the page width. */
+  --ball-d: clamp(64px, 4.6vw, 96px);
 }
 
 body {
@@ -44,28 +53,29 @@ body {
   overflow-x: hidden;
 }
 
-/* Southwest Tech wordmark, top-left (reuses the diamond icon already in /images) */
-body::before {
+/* Southwest Tech wordmark — sits in normal document flow, right above
+   the Pattern banner (see #brand-header in index.html) */
+#brand-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin: 4px auto 10px;
+}
+#brand-header::before {
   content: "";
-  position: fixed;
-  top: 18px;
-  left: 24px;
   width: 30px;
   height: 30px;
   background: url('../../images/BingoCardFreeSpot.png') center / contain no-repeat;
-  z-index: 5;
+  flex-shrink: 0;
 }
-body::after {
+#brand-header::after {
   content: "SOUTHWEST TECH \2022 25 YEARS";
-  position: fixed;
-  top: 22px;
-  left: 62px;
   font-family: 'Tungsten', sans-serif;
   font-weight: bold;
   letter-spacing: 1.5px;
   font-size: 1.15rem;
   color: var(--gold);
-  z-index: 5;
 }
 
 h1, h2, h3, .glow-title, #pattern-banner label, .announce-letter {
@@ -76,20 +86,20 @@ h1, h2, h3, .glow-title, #pattern-banner label, .announce-letter {
   text-shadow: 0 0 10px rgba(253, 188, 89, 0.25);
 }
 
-.view, #board-layout, #card-view, #all-cards-view, #pattern-banner, #last-called {
+.view, #board-layout, #card-view, #all-cards-view, #pattern-banner, #last-called, #brand-header {
   position: relative;
   z-index: 1;
 }
 
 /* ===== "Last called" ball ===== */
 #last-called {
-  width: 110px;
-  height: 110px;
-  line-height: 110px;
+  width: calc(var(--ball-d) * 1.7);
+  height: calc(var(--ball-d) * 1.7);
+  line-height: calc(var(--ball-d) * 1.7);
   border-radius: 50%;
   margin: 26px auto 12px;
-  font-family: 'Tungsten', sans-serif;
-  font-size: 2.8rem;
+  font-family: 'Atkinson Hyperlegible', 'Tungsten', sans-serif;
+  font-size: calc(var(--ball-d) * 0.5);
   font-weight: bold;
   background: rgba(255, 255, 255, 0.14);
   border: 2px solid rgba(253, 188, 89, 0.4);
@@ -101,18 +111,34 @@ h1, h2, h3, .glow-title, #pattern-banner label, .announce-letter {
    this lets the board use the exact same colors as the console
    (defined once in style.css), so the two always match. */
 
+#number-grid {
+  max-width: 78vw;
+}
+
+.grid-row {
+  gap: 6px;
+}
+
 .row-label {
+  width: var(--ball-d);
+  height: var(--ball-d);
+  line-height: var(--ball-d);
   color: var(--gold);
   font-family: 'Tungsten', sans-serif;
   font-weight: bold;
+  font-size: calc(var(--ball-d) * 0.42);
 }
 
 .number {
+  width: var(--ball-d);
+  height: var(--ball-d);
+  line-height: var(--ball-d);
   background: rgba(151, 178, 188, 0.18);
   color: var(--white);
   border: 1px solid rgba(253, 188, 89, 0.35);
-  font-family: 'Tungsten', sans-serif;
+  font-family: 'Atkinson Hyperlegible', sans-serif;
   font-weight: bold;
+  font-size: calc(var(--ball-d) * 0.34);
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.35);
 }
 .called {
@@ -169,7 +195,7 @@ input[type="number"], input[type="text"], select {
 }
 
 @media (max-width: 840px) {
-  body::after { font-size: 0.9rem; }
+  #brand-header::after { font-size: 0.9rem; }
 }
 
 /* ===== Pattern Preview (mini 5×5) ===== */
