@@ -34,6 +34,7 @@
   --steel-dark: #5f7d88;
   --bronze: #c98a4b;
   --white: #ffffff;
+  --winner: #ff5c72;
 
   /* Ball/label size — scales with viewport width but stays round,
      and keeps the whole grid at roughly 3/4 of the page width. */
@@ -181,7 +182,7 @@ h1, h2, h3, .glow-title, #pattern-banner label, .announce-letter {
   font-weight: bold;
 }
 .card-cell.marked { background: var(--gold); color: var(--navy-deep); }
-.card-cell.winner { border: 3px solid var(--gold); box-shadow: 0 0 14px rgba(253, 188, 89, 0.7); }
+.card-cell.winner { border: 3px solid var(--winner); box-shadow: 0 0 14px rgba(255, 92, 114, 0.7); }
 
 .winner-badge {
   background: var(--gold);
@@ -216,9 +217,9 @@ input[type="number"], input[type="text"], select {
 #all-cards-view .card-cell.marked { background: var(--gold); color: var(--navy-deep); }
 
 .card-wrapper.winner {
-  border-color: var(--gold);
-  box-shadow: 0 0 14px rgba(253, 188, 89, 0.7);
-  background: rgba(253, 188, 89, 0.08);
+  border-color: var(--winner);
+  box-shadow: 0 0 14px rgba(255, 92, 114, 0.7);
+  background: rgba(255, 92, 114, 0.08);
 }
 
 @media (max-width: 840px) {
