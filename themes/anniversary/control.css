@@ -19,6 +19,8 @@
   font-display: swap;
 }
 
+@import url('https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&display=swap');
+
 :root {
   --navy: #0b415f;
   --navy-deep: #082e44;
@@ -205,7 +207,7 @@ select.pattern-select option, #theme-select option { color: var(--ink); backgrou
 
 #pattern-preview .preview-title, #pattern-preview .pf-title,
 #pattern-preview-flyout .preview-title, #pattern-preview-flyout .pf-title {
-  font-family: 'Tungsten', sans-serif;
+  font-family: 'Atkinson Hyperlegible', sans-serif;
   font-weight: bold;
   font-size: 1.15rem;
   margin-bottom: 6px;
@@ -215,7 +217,8 @@ select.pattern-select option, #theme-select option { color: var(--ink); backgrou
 
 #pattern-preview .preview-note, #pattern-preview .pf-note,
 #pattern-preview-flyout .preview-note, #pattern-preview-flyout .pf-note {
-  font-size: 0.85rem;
+  font-family: 'Atkinson Hyperlegible', sans-serif;
+  font-size: 0.9rem;
   text-align: center;
   color: var(--steel);
   margin-bottom: 8px;

@@ -833,6 +833,14 @@ function makeDraggable(el, handle) {
 
 // call this whenever you refresh UI
 function showPatternFlyout() {
+  // If a static container is already present in the page (e.g. the call
+  // board's embedded top-left panel), just render into it — no floating,
+  // draggable window needed there. Otherwise (e.g. the console), fall
+  // back to the original floating flyout behavior.
+  if (document.getElementById("pattern-preview-flyout")) {
+    renderPatternPreview();
+    return;
+  }
   ensurePatternFlyout();
   renderPatternPreview();
 }

@@ -90,9 +90,32 @@ h1, h2, h3, .glow-title, #pattern-banner label, .announce-letter {
   text-shadow: 0 0 10px rgba(253, 188, 89, 0.25);
 }
 
-.view, #board-layout, #card-view, #all-cards-view, #pattern-banner, #last-called, #brand-header {
+.view, #board-layout, #card-view, #all-cards-view, #pattern-banner, #last-called, #brand-header, #top-columns {
   position: relative;
   z-index: 1;
+}
+
+/* ===== Two-column top section: pattern preview (left) + last-called (right) ===== */
+#top-columns {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 40px;
+  width: 100%;
+  max-width: 900px;
+  margin: 10px auto 4px;
+}
+
+#top-left-col, #top-right-col {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 200px;
+}
+
+@media (max-width: 700px) {
+  #top-columns { flex-direction: column; gap: 20px; }
 }
 
 /* ===== "Last called" ball ===== */
@@ -101,7 +124,7 @@ h1, h2, h3, .glow-title, #pattern-banner label, .announce-letter {
   height: calc(var(--ball-d) * 1.7);
   line-height: calc(var(--ball-d) * 1.7);
   border-radius: 50%;
-  margin: 26px auto 12px;
+  margin: 0;
   font-family: 'Atkinson Hyperlegible', sans-serif;
   font-size: calc(var(--ball-d) * 0.72);
   font-weight: bold;
@@ -225,7 +248,7 @@ input[type="number"], input[type="text"], select {
 
 #pattern-preview .preview-title, #pattern-preview .pf-title,
 #pattern-preview-flyout .preview-title, #pattern-preview-flyout .pf-title {
-  font-family: 'Tungsten', sans-serif;
+  font-family: 'Atkinson Hyperlegible', sans-serif;
   font-weight: bold;
   font-size: 1.15rem;
   margin-bottom: 6px;
@@ -235,7 +258,8 @@ input[type="number"], input[type="text"], select {
 
 #pattern-preview .preview-note, #pattern-preview .pf-note,
 #pattern-preview-flyout .preview-note, #pattern-preview-flyout .pf-note {
-  font-size: 0.85rem;
+  font-family: 'Atkinson Hyperlegible', sans-serif;
+  font-size: 0.9rem;
   text-align: center;
   color: var(--steel);
   margin-bottom: 8px;
