@@ -26,6 +26,8 @@
   --gold-deep: #e8a83c;
   --charcoal: #16262f;
   --steel: #97b2bc;
+  --steel-dark: #5f7d88;
+  --bronze: #c98a4b;
   --white: #ffffff;
 }
 
@@ -34,7 +36,9 @@ body {
   text-align: center;
   padding: 20px;
   color: var(--white);
-  background: radial-gradient(circle at 50% 0%, var(--navy) 0%, var(--navy-deep) 75%);
+  background:
+    url('../../images/Anniversary25Background.png') center bottom / cover no-repeat fixed,
+    radial-gradient(circle at 50% 0%, var(--navy) 0%, var(--navy-deep) 75%);
   min-height: 100vh;
   position: relative;
   overflow-x: hidden;
@@ -64,26 +68,6 @@ body::after {
   z-index: 5;
 }
 
-/* Oversized faint "25" watermark, echoing the anniversary artwork */
-#board-layout::before {
-  content: "25";
-  position: fixed;
-  right: -4%;
-  bottom: -10%;
-  font-family: 'Tungsten', sans-serif;
-  font-weight: bold;
-  font-size: min(55vw, 820px);
-  line-height: 1;
-  background: linear-gradient(180deg, var(--charcoal) 20%, var(--gold) 85%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  opacity: 0.16;
-  pointer-events: none;
-  z-index: 0;
-  user-select: none;
-}
-
 h1, h2, h3, .glow-title, #pattern-banner label, .announce-letter {
   font-family: 'Tungsten', sans-serif;
   font-weight: bold;
@@ -107,17 +91,18 @@ h1, h2, h3, .glow-title, #pattern-banner label, .announce-letter {
   font-family: 'Tungsten', sans-serif;
   font-size: 2.8rem;
   font-weight: bold;
-  background: var(--steel);
-  color: var(--navy-deep);
-  box-shadow: 0 0 20px rgba(253, 188, 89, 0.35), 0 4px 12px rgba(0, 0, 0, 0.4);
+  background: rgba(255, 255, 255, 0.14);
+  border: 2px solid rgba(253, 188, 89, 0.4);
+  color: var(--white);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
 }
 
-/* BINGO color palette (alternating gold / steel to stay on-brand) */
+/* BINGO color palette — each letter gets its own distinct color */
 .called.B, #last-called.last-ball.B { background: var(--gold); color: var(--navy-deep); }
 .called.I, #last-called.last-ball.I { background: var(--steel); color: var(--navy-deep); }
 .called.N, #last-called.last-ball.N { background: var(--gold-deep); color: var(--navy-deep); }
-.called.G, #last-called.last-ball.G { background: var(--steel); color: var(--navy-deep); }
-.called.O, #last-called.last-ball.O { background: var(--gold); color: var(--navy-deep); }
+.called.G, #last-called.last-ball.G { background: var(--steel-dark); color: var(--white); }
+.called.O, #last-called.last-ball.O { background: var(--bronze); color: var(--navy-deep); }
 
 .row-label {
   color: var(--gold);
@@ -134,8 +119,6 @@ h1, h2, h3, .glow-title, #pattern-banner label, .announce-letter {
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.35);
 }
 .called {
-  background: var(--gold) !important;
-  color: var(--navy-deep) !important;
   box-shadow: 0 0 14px rgba(253, 188, 89, 0.6);
 }
 
@@ -159,11 +142,16 @@ h1, h2, h3, .glow-title, #pattern-banner label, .announce-letter {
 /* ===== Announcer ===== */
 .announce-letter { color: var(--gold); }
 .announce-ball {
-  background: var(--steel);
-  color: var(--navy-deep);
+  background: rgba(255, 255, 255, 0.14);
+  color: var(--white);
   font-family: 'Tungsten', sans-serif;
   font-weight: bold;
 }
+.announce-letter.B, .announce-ball.B { background: var(--gold); color: var(--navy-deep); }
+.announce-letter.I, .announce-ball.I { background: var(--steel); color: var(--navy-deep); }
+.announce-letter.N, .announce-ball.N { background: var(--gold-deep); color: var(--navy-deep); }
+.announce-letter.G, .announce-ball.G { background: var(--steel-dark); color: var(--white); }
+.announce-letter.O, .announce-ball.O { background: var(--bronze); color: var(--navy-deep); }
 
 /* ===== Inputs ===== */
 input[type="number"], input[type="text"], select {
@@ -190,6 +178,5 @@ input[type="number"], input[type="text"], select {
 }
 
 @media (max-width: 840px) {
-  #board-layout::before { font-size: 60vw; }
   body::after { font-size: 0.9rem; }
 }
