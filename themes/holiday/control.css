@@ -1,0 +1,161 @@
+/* control_style (Holiday Lite) */
+
+/* ===== Theme Vars ===== */
+:root {
+  --pine: #0f2f25;
+  --pine-dark: #0a231b;
+  --mint: #41b883;
+  --holly: #1e7a57;
+  --berry: #d64545;
+  --berry-dark: #b33333;
+  --snow: #ffffff;
+  --gold: #f5c667;
+  --ink: #000000;
+}
+
+/* ===== Page ===== */
+body.control-panel {
+  font-family: 'Courier New', Courier, monospace;
+  color: var(--snow);
+  text-align: center;
+  padding: 30px;
+  min-height: 100vh;
+  background:
+    linear-gradient(160deg, var(--pine) 0%, var(--pine-dark) 60%);
+}
+
+/* ===== Title (simple glow, no animation) ===== */
+.glow-title {
+  font-size: 2.2rem;
+  color: var(--gold);
+  margin-bottom: 24px;
+  text-shadow: 0 0 6px rgba(245,198,103,0.6);
+}
+
+/* ===== Layout ===== */
+.control-layout {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.left-controls,
+.right-sidebar {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 12px;
+  padding: 14px;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.25); /* light shadow only */
+}
+
+.left-controls { flex: 1; }
+.right-sidebar { width: 260px; color: var(--snow); }
+
+.right-sidebar h3 {
+  color: var(--gold);
+  border-bottom: 1px dashed rgba(245,198,103,0.5);
+  padding-bottom: 6px;
+  margin-bottom: 8px;
+  font-size: 1rem;
+}
+
+#winner-list {
+  list-style: none; padding: 0; margin: 0;
+}
+#winner-list li {
+  color: #fffbe8;
+  font-weight: bold;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.12);
+  padding: 6px 8px;
+  border-radius: 8px;
+  margin-bottom: 6px;
+}
+
+/* ===== Rows ===== */
+.panel-row {
+  margin: 14px 0;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+/* ===== Info ===== */
+.panel-info {
+  margin-top: 20px;
+  font-size: 1.05rem;
+  color: #fff;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.14);
+  border-radius: 10px;
+  padding: 10px 12px;
+}
+
+/* ===== Inputs / Selects (high-contrast, no flicker) ===== */
+input[type="number"],
+input[type="text"],
+select.pattern-select {
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 2px solid var(--gold);
+  background: #ffffff;    /* solid white for speed + clarity */
+  color: var(--ink);      /* black text */
+  font-size: 1rem;
+  width: 180px;
+  outline: none;
+  transition: border-color .15s ease; /* minimal transition */
+  box-shadow: none;                   /* no inner shadows */
+}
+
+/* Make sure options also show black text */
+select.pattern-select { width: 220px; color: var(--ink); background: #fff; }
+select.pattern-select option { color: var(--ink); background: #fff; }
+
+/* Focus */
+input[type="number"]:focus,
+input[type="text"]:focus,
+select.pattern-select:focus {
+  border-color: #e6b84f;
+}
+
+/* ===== Buttons (reduced effects) ===== */
+.btn {
+  padding: 10px 18px;
+  font-size: 1rem;
+  border: none;
+  border-radius: 999px;
+  cursor: pointer;
+  font-weight: 800;
+  letter-spacing: 0.3px;
+  transition: transform .08s ease, box-shadow .15s ease;
+}
+
+/* Festive green = action */
+.btn.neon {
+  background: linear-gradient(180deg, var(--mint), var(--holly));
+  color: #072119;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.25);
+}
+.btn.neon:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+}
+
+/* Festive red = danger */
+.btn.danger {
+  background: linear-gradient(180deg, var(--berry), var(--berry-dark));
+  color: #fff;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.25);
+}
+.btn.danger:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+}
+
+/* ===== Counters ===== */
+#control-count {
+  font-weight: bold;
+  color: var(--gold);
+}

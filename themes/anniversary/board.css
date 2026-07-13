@@ -1,0 +1,195 @@
+/* themes/anniversary/board.css — 25th Anniversary (Southwest Tech gold & navy) */
+
+@font-face {
+  font-family: 'Tungsten';
+  src: url('../../fonts/Tungsten-Book.woff2') format('woff2'),
+       url('../../fonts/Tungsten-Book.woff') format('woff'),
+       url('../../fonts/Tungsten-Book.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Tungsten';
+  src: url('../../fonts/Tungsten-Bold.woff2') format('woff2'),
+       url('../../fonts/Tungsten-Bold.woff') format('woff'),
+       url('../../fonts/Tungsten-Bold.otf') format('opentype');
+  font-weight: bold;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --navy: #0b415f;
+  --navy-deep: #082e44;
+  --gold: #fdbc59;
+  --gold-deep: #e8a83c;
+  --charcoal: #16262f;
+  --steel: #97b2bc;
+  --white: #ffffff;
+}
+
+body {
+  font-family: "itc-avant-garde-gothic-pro", 'Segoe UI', sans-serif;
+  text-align: center;
+  padding: 20px;
+  color: var(--white);
+  background: radial-gradient(circle at 50% 0%, var(--navy) 0%, var(--navy-deep) 75%);
+  min-height: 100vh;
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* Southwest Tech wordmark, top-left (reuses the diamond icon already in /images) */
+body::before {
+  content: "";
+  position: fixed;
+  top: 18px;
+  left: 24px;
+  width: 30px;
+  height: 30px;
+  background: url('../../images/BingoCardFreeSpot.png') center / contain no-repeat;
+  z-index: 5;
+}
+body::after {
+  content: "SOUTHWEST TECH \2022 25 YEARS";
+  position: fixed;
+  top: 22px;
+  left: 62px;
+  font-family: 'Tungsten', sans-serif;
+  font-weight: bold;
+  letter-spacing: 1.5px;
+  font-size: 1.15rem;
+  color: var(--gold);
+  z-index: 5;
+}
+
+/* Oversized faint "25" watermark, echoing the anniversary artwork */
+#board-layout::before {
+  content: "25";
+  position: fixed;
+  right: -4%;
+  bottom: -10%;
+  font-family: 'Tungsten', sans-serif;
+  font-weight: bold;
+  font-size: min(55vw, 820px);
+  line-height: 1;
+  background: linear-gradient(180deg, var(--charcoal) 20%, var(--gold) 85%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  opacity: 0.16;
+  pointer-events: none;
+  z-index: 0;
+  user-select: none;
+}
+
+h1, h2, h3, .glow-title, #pattern-banner label, .announce-letter {
+  font-family: 'Tungsten', sans-serif;
+  font-weight: bold;
+  letter-spacing: 1px;
+  color: var(--gold);
+  text-shadow: 0 0 10px rgba(253, 188, 89, 0.25);
+}
+
+.view, #board-layout, #card-view, #all-cards-view, #pattern-banner, #last-called {
+  position: relative;
+  z-index: 1;
+}
+
+/* ===== "Last called" ball ===== */
+#last-called {
+  width: 110px;
+  height: 110px;
+  line-height: 110px;
+  border-radius: 50%;
+  margin: 26px auto 12px;
+  font-family: 'Tungsten', sans-serif;
+  font-size: 2.8rem;
+  font-weight: bold;
+  background: var(--steel);
+  color: var(--navy-deep);
+  box-shadow: 0 0 20px rgba(253, 188, 89, 0.35), 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+/* BINGO color palette (alternating gold / steel to stay on-brand) */
+.called.B, #last-called.last-ball.B { background: var(--gold); color: var(--navy-deep); }
+.called.I, #last-called.last-ball.I { background: var(--steel); color: var(--navy-deep); }
+.called.N, #last-called.last-ball.N { background: var(--gold-deep); color: var(--navy-deep); }
+.called.G, #last-called.last-ball.G { background: var(--steel); color: var(--navy-deep); }
+.called.O, #last-called.last-ball.O { background: var(--gold); color: var(--navy-deep); }
+
+.row-label {
+  color: var(--gold);
+  font-family: 'Tungsten', sans-serif;
+  font-weight: bold;
+}
+
+.number {
+  background: rgba(151, 178, 188, 0.18);
+  color: var(--white);
+  border: 1px solid rgba(253, 188, 89, 0.35);
+  font-family: 'Tungsten', sans-serif;
+  font-weight: bold;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.35);
+}
+.called {
+  background: var(--gold) !important;
+  color: var(--navy-deep) !important;
+  box-shadow: 0 0 14px rgba(253, 188, 89, 0.6);
+}
+
+/* ===== Cards ===== */
+.card-cell {
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--white);
+  border: 1px solid rgba(151, 178, 188, 0.4);
+  font-family: 'Tungsten', sans-serif;
+  font-weight: bold;
+}
+.card-cell.marked { background: var(--gold); color: var(--navy-deep); }
+.card-cell.winner { border: 3px solid var(--gold); box-shadow: 0 0 14px rgba(253, 188, 89, 0.7); }
+
+.winner-badge {
+  background: var(--gold);
+  color: var(--navy-deep);
+  font-weight: bold;
+}
+
+/* ===== Announcer ===== */
+.announce-letter { color: var(--gold); }
+.announce-ball {
+  background: var(--steel);
+  color: var(--navy-deep);
+  font-family: 'Tungsten', sans-serif;
+  font-weight: bold;
+}
+
+/* ===== Inputs ===== */
+input[type="number"], input[type="text"], select {
+  background: rgba(255, 255, 255, 0.92);
+  color: var(--navy-deep);
+  border: 2px solid var(--gold);
+  border-radius: 8px;
+  padding: 8px 10px;
+  outline: none;
+}
+
+/* ===== All-cards view ===== */
+#all-cards-view .card-wrapper {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(151, 178, 188, 0.4);
+}
+#all-cards-view .card-title { color: var(--gold); }
+#all-cards-view .card-cell.marked { background: var(--gold); color: var(--navy-deep); }
+
+.card-wrapper.winner {
+  border-color: var(--gold);
+  box-shadow: 0 0 14px rgba(253, 188, 89, 0.7);
+  background: rgba(253, 188, 89, 0.08);
+}
+
+@media (max-width: 840px) {
+  #board-layout::before { font-size: 60vw; }
+  body::after { font-size: 0.9rem; }
+}

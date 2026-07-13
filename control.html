@@ -5,7 +5,9 @@
   <meta charset="UTF-8">
   <title>Bingo Control Panel</title>
   <link rel="stylesheet" href="style.css">
-  <link rel="stylesheet" href="control_style_holiday.css">
+  <link id="theme-control-css" rel="stylesheet" href="">
+  <link rel="stylesheet" href="https://use.typekit.net/kbi4fnp.css">
+  <script src="themes/themes.js"></script>
   <script src="cardData_with_free.js"></script>
 </head>
 <body class="control-panel">
@@ -26,6 +28,16 @@
     <option value="coverall">Coverall</option>
   </select>
   <button class="btn neon" onclick="applySelectedPattern()">Set Pattern</button>
+  </div>
+
+  <div class="panel-row">
+  <label for="theme-select" style="align-self:center">Theme:</label>
+  <select id="theme-select" class="pattern-select" onchange="setTheme(this.value)">
+    <option value="default">Default</option>
+    <option value="holiday">Holiday</option>
+    <option value="western">Western</option>
+    <option value="anniversary">25th Anniversary</option>
+  </select>
   </div>
 
   <div class="control-layout">

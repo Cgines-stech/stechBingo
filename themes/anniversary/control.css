@@ -1,0 +1,192 @@
+/* themes/anniversary/control.css — 25th Anniversary console skin */
+
+@font-face {
+  font-family: 'Tungsten';
+  src: url('../../fonts/Tungsten-Book.woff2') format('woff2'),
+       url('../../fonts/Tungsten-Book.woff') format('woff'),
+       url('../../fonts/Tungsten-Book.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Tungsten';
+  src: url('../../fonts/Tungsten-Bold.woff2') format('woff2'),
+       url('../../fonts/Tungsten-Bold.woff') format('woff'),
+       url('../../fonts/Tungsten-Bold.otf') format('opentype');
+  font-weight: bold;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --navy: #0b415f;
+  --navy-deep: #082e44;
+  --gold: #fdbc59;
+  --gold-deep: #e8a83c;
+  --charcoal: #16262f;
+  --steel: #97b2bc;
+  --snow: #ffffff;
+  --ink: #0b1c22;
+}
+
+body.control-panel {
+  font-family: "itc-avant-garde-gothic-pro", 'Segoe UI', sans-serif;
+  color: var(--snow);
+  text-align: center;
+  padding: 30px;
+  min-height: 100vh;
+  position: relative;
+  overflow-x: hidden;
+  background: radial-gradient(circle at 50% 0%, var(--navy) 0%, var(--navy-deep) 80%);
+}
+
+/* Faint oversized "25" watermark tucked in the corner */
+body.control-panel::before {
+  content: "25";
+  position: fixed;
+  right: -6%;
+  bottom: -12%;
+  font-family: 'Tungsten', sans-serif;
+  font-weight: bold;
+  font-size: min(45vw, 640px);
+  line-height: 1;
+  background: linear-gradient(180deg, var(--charcoal) 20%, var(--gold) 85%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  opacity: 0.14;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.glow-title {
+  position: relative;
+  z-index: 1;
+  font-family: 'Tungsten', sans-serif;
+  font-weight: bold;
+  font-size: 2.4rem;
+  color: var(--gold);
+  text-shadow: 0 0 12px rgba(253, 188, 89, 0.4);
+  margin-bottom: 24px;
+}
+
+.control-layout, .panel-row, .panel-info, .announcer-display, #announcer-display {
+  position: relative;
+  z-index: 1;
+}
+
+.control-layout {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.left-controls, .right-sidebar {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(253, 188, 89, 0.25);
+  border-radius: 12px;
+  padding: 14px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.35);
+}
+.left-controls { flex: 1; }
+.right-sidebar { width: 260px; color: var(--snow); }
+
+.right-sidebar h3 {
+  color: var(--gold);
+  border-bottom: 1px solid rgba(253, 188, 89, 0.4);
+  padding-bottom: 6px;
+  margin-bottom: 8px;
+  font-family: 'Tungsten', sans-serif;
+  text-shadow: none;
+}
+
+#winner-list { list-style: none; padding: 0; margin: 0; }
+#winner-list li {
+  color: var(--snow);
+  font-weight: bold;
+  background: rgba(253, 188, 89, 0.1);
+  border: 1px solid rgba(253, 188, 89, 0.3);
+  padding: 6px 8px;
+  border-radius: 8px;
+  margin-bottom: 6px;
+}
+
+.panel-row {
+  margin: 14px 0;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.panel-info {
+  margin-top: 20px;
+  font-size: 1.05rem;
+  color: var(--snow);
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(253, 188, 89, 0.25);
+  border-radius: 10px;
+  padding: 10px 12px;
+}
+
+input[type="number"], input[type="text"], select.pattern-select, #theme-select {
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 2px solid var(--gold);
+  background: #ffffff;
+  color: var(--ink);
+  font-size: 1rem;
+  width: 180px;
+  outline: none;
+}
+select.pattern-select { width: 220px; }
+select.pattern-select option, #theme-select option { color: var(--ink); background: #fff; }
+
+.btn {
+  padding: 10px 18px;
+  font-size: 1rem;
+  border: none;
+  border-radius: 999px;
+  cursor: pointer;
+  font-weight: 800;
+  letter-spacing: 0.3px;
+  transition: transform .08s ease, box-shadow .15s ease;
+}
+
+.btn.neon {
+  background: linear-gradient(180deg, var(--gold), var(--gold-deep));
+  color: var(--navy-deep);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.35);
+}
+.btn.neon:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.4);
+}
+
+.btn.danger {
+  background: linear-gradient(180deg, #d64545, #b33333);
+  color: #fff;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.35);
+}
+.btn.danger:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.4);
+}
+
+.btn.success {
+  background: linear-gradient(180deg, var(--steel), #7c98a3);
+  color: var(--navy-deep);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.35);
+}
+.btn.success:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.4);
+}
+
+#control-count { font-weight: bold; color: var(--gold); }
+
+@media (max-width: 840px) {
+  body.control-panel::before { font-size: 70vw; }
+}
